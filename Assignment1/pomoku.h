@@ -41,6 +41,19 @@ int copy_row(const color_t color, const size_t src, const size_t dst);
 
 int copy_column(const color_t color, const size_t src, const size_t dst);
 
-int g_board[20][20];
+/* custom functions */
+void calculate_score(const color_t color);
+
+int set_scores(int *score);
+
+extern int g_board[20][20];
+
+extern int g_col;
+
+extern int g_row;
+
+extern int g_black_score;
+
+extern int g_white_score;
 
 #endif /* POMOKU_H */
