@@ -113,7 +113,7 @@ int insert_row(const color_t color, const size_t row)
 
     if (g_row >= G_ROW_MAX_LIMIT)
     {
-        return -1;
+        return FALSE;
     }
 
     for (i = g_row; i >= row; i--)
@@ -128,6 +128,8 @@ int insert_row(const color_t color, const size_t row)
     {
         g_board[row][col] = -1;
     }
+
+    return TRUE;
 }
 
 int insert_column(const color_t color, const size_t col)
@@ -137,7 +139,7 @@ int insert_column(const color_t color, const size_t col)
 
     if (g_col >= G_COL_MAX_LIMIT)
     {
-        return -1;
+        return FALSE;
     }
 
     for (i = g_col; i >= col; i--)
@@ -152,6 +154,8 @@ int insert_column(const color_t color, const size_t col)
     {
         g_board[row][col] = -1;
     }
+
+    return TRUE;
 }
 
 void calculate_score(const color_t color)
