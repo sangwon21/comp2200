@@ -46,7 +46,14 @@ int get_score(const color_t color)
     {
         return g_black_score;
     }
-    return g_white_score;
+
+    if (color == COLOR_WHITE)
+    {
+
+        return g_white_score;
+    }
+
+    return -1;
 }
 
 int get_color(const size_t row, const size_t col)
@@ -60,10 +67,12 @@ int is_placeable(const size_t row, const size_t col)
     {
         return FALSE;
     }
+
     if (g_board[row][col] == COLOR_BLACK || g_board[row][col] == COLOR_WHITE)
     {
         return FALSE;
     }
+
     return TRUE;
 }
 
@@ -76,30 +85,73 @@ int place_stone(const color_t color, const size_t row, const size_t col)
 
     g_board[row][col] = color;
 
-    /* todo : calculate score */
     calculate_score(color);
 
     return TRUE;
 }
 
-int insert_row(const color_t color, const size_t row)
-{
-    if (g_row > G_COL_MAX_LIMIT)
-    {
-        return FALSE;
-    }
-}
-
 int set_scores(int *score)
 {
     int result = 0;
+    int number = SCORE_LIMITS;
     if (*score >= SCORE_LIMITS)
     {
-        result = *score - SCORE_LIMITS + 1;
+        for (; number <= *score; number++)
+        {
+            result += number - SCORE_LIMITS + 1;
+        }
     }
+
     *score = 0;
 
     return result;
+}
+
+int insert_row(const color_t color, const size_t row)
+{
+    int i, col;
+
+    if (g_row >= G_ROW_MAX_LIMIT)
+    {
+        return -1;
+    }
+
+    for (i = g_row; i >= row; i--)
+    {
+        for (col = 0; col < g_col; col++)
+        {
+            g_board[i][col] = g_board[i - 1][col];
+        }
+    }
+
+    for (col = 0; col < G_COL_MAX_LIMIT; col++)
+    {
+        g_board[row][col] = -1;
+    }
+}
+
+int insert_column(const color_t color, const size_t col)
+{
+
+    int i, row;
+
+    if (g_col >= G_COL_MAX_LIMIT)
+    {
+        return -1;
+    }
+
+    for (i = g_col; i >= col; i--)
+    {
+        for (row = 0; row < g_row; row++)
+        {
+            g_board[row][i] = g_board[row][i - 1];
+        }
+    }
+
+    for (row = 0; row < G_ROW_MAX_LIMIT; row++)
+    {
+        g_board[row][col] = -1;
+    }
 }
 
 void calculate_score(const color_t color)
@@ -150,13 +202,13 @@ void calculate_score(const color_t color)
         col_score += set_scores(&col_counts);
     }
 
-    /* \ */
+    /* / */
     for (col = 0; col < G_COL_MAX_LIMIT; col++)
     {
         startCol = col;
-        for (row = 0; row < G_ROW_MAX_LIMIT; row++, startCol++)
+        for (row = 0; row < G_ROW_MAX_LIMIT; row++, startCol--)
         {
-            if (startCol == 20)
+            if (startCol < 0)
             {
                 break;
             }
@@ -170,13 +222,13 @@ void calculate_score(const color_t color)
         diagonal_score += set_scores(&diagonal_counts);
     }
 
-    /* / */
+    /* \ */
     for (col = G_COL_MAX_LIMIT - 1; col >= 0; col--)
     {
         startCol = col;
-        for (row = G_ROW_MAX_LIMIT - 1; row >= 0; row--, startCol--)
+        for (row = 0; row < G_ROW_MAX_LIMIT; row++, startCol++)
         {
-            if (startCol <= 0)
+            if (startCol >= G_COL_MAX_LIMIT)
             {
                 break;
             }
@@ -192,9 +244,9 @@ void calculate_score(const color_t color)
 
     if (color == COLOR_BLACK)
     {
-        g_black_score += row_score + col_score + diagonal_score + reverse_diagonal_score;
+        g_black_score = row_score + col_score + diagonal_score + reverse_diagonal_score;
         return;
     }
 
-    g_white_score += row_score + col_score + diagonal_score + reverse_diagonal_score;
+    g_white_score = row_score + col_score + diagonal_score + reverse_diagonal_score;
 }
