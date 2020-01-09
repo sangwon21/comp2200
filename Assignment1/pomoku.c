@@ -129,6 +129,15 @@ int insert_row(const color_t color, const size_t row)
         g_board[row][col] = -1;
     }
 
+    if (color == COLOR_BLACK)
+    {
+        g_black_score -= 3;
+    }
+    else
+    {
+        g_white_score -= 3;
+    }
+
     return TRUE;
 }
 
@@ -153,6 +162,15 @@ int insert_column(const color_t color, const size_t col)
     for (row = 0; row < G_ROW_MAX_LIMIT; row++)
     {
         g_board[row][col] = -1;
+    }
+
+    if (color == COLOR_BLACK)
+    {
+        g_black_score -= 3;
+    }
+    else
+    {
+        g_white_score -= 3;
     }
 
     return TRUE;
