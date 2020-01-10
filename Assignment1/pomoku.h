@@ -4,8 +4,7 @@
 #define TRUE (1)
 #define FALSE (0)
 
-typedef enum color
-{
+typedef enum color {
     COLOR_BLACK,
     COLOR_WHITE
 } color_t;
@@ -72,8 +71,7 @@ extern size_t g_black_score;
 
 extern size_t g_white_score;
 
-typedef enum status
-{
+typedef enum status {
     STATUS_PLACEABLE = -1,
     STATUS_NOT_ALLOWED = -2
 } status_t;
