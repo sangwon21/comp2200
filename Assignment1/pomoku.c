@@ -279,28 +279,28 @@ void calculate_score(const color_t color, const size_t row, const size_t col)
     /*
     int row_index;
     */
-    int col_index;
+    size_t col_index;
 
     size_t scores;
 
     /* - */
-    for (col_index = col; col_index < (int)g_col; col_index++) {
+    for (col_index = col; col_index < g_col; ++col_index) {
         if (g_board[row][col_index] == color) {
             row_counts += 1;
             continue;
         }
         break;
     }
+    
+    for (col_index = col; col_index != (size_t)-1; --col_index) {
+        if (g_board[row][col_index] == color) {
+            row_counts += 1;
+            continue;
+        }
+        break;
+    }
+    
     /*
-    for (col_index = (int)col; col_index >= MINIMUM_INDEX; col_index--) {
-        if (g_board[row][col_index] == color) {
-            row_counts += 1;
-            continue;
-        }
-        break;
-    }
-    
-    
     for (row_index = row; row_index < (int)g_row; row_index++) {
         if (g_board[row_index][col] == color) {
             col_counts += 1;
