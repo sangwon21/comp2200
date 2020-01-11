@@ -79,6 +79,10 @@ int get_color(const size_t row, const size_t col)
 
 int is_placeable(const size_t row, const size_t col)
 {
+    if ( (int)row < MINIMUM_INDEX || (int)col < MINIMUM_INDEX) {
+        return FALSE;
+    }
+
     if (row >= g_row || col >= g_col) {
         return FALSE;
     }
@@ -287,7 +291,7 @@ void calculate_score(const color_t color, const size_t row, const size_t col)
         }
         break;
     }
-
+    /*
     for (col_index = (int)col; col_index >= MINIMUM_INDEX; col_index--) {
         if (g_board[row][col_index] == color) {
             row_counts += 1;
@@ -296,7 +300,7 @@ void calculate_score(const color_t color, const size_t row, const size_t col)
         break;
     }
     
-    /*
+    
     for (row_index = row; row_index < (int)g_row; row_index++) {
         if (g_board[row_index][col] == color) {
             col_counts += 1;
