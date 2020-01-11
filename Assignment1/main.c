@@ -15,6 +15,8 @@ void score_test1(void);
 
 int main(void)
 {
+    calculate_score(COLOR_BLACK, -1, 20);
+    /*
     init_game();
     
     assert(place_stone(COLOR_BLACK, 0, 0) == TRUE);
@@ -47,7 +49,7 @@ int main(void)
 
     score_test();
     score_test1();
-    
+    */
     return 0;
 }
 

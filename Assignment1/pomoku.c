@@ -98,6 +98,7 @@ int place_stone(const color_t color, const size_t row, const size_t col)
 
     g_board[row][col] = color;
     
+    calculate_score(color, row, col);
 
     return TRUE;
 }
@@ -271,7 +272,9 @@ void calculate_score(const color_t color, const size_t row, const size_t col)
     size_t diagonal_counts = 0;
     size_t reverse_diagonal_counts = 0;
 
+    /*
     int row_index;
+    */
     int col_index;
 
     size_t scores;
@@ -285,15 +288,15 @@ void calculate_score(const color_t color, const size_t row, const size_t col)
         break;
     }
 
-    for (col_index = (int)col - 1; col_index >= MINIMUM_INDEX; col_index--) {
+    for (col_index = (int)col; col_index >= MINIMUM_INDEX; col_index--) {
         if (g_board[row][col_index] == color) {
             row_counts += 1;
             continue;
         }
         break;
     }
-
-    /* | */
+    
+    /*
     for (row_index = row; row_index < (int)g_row; row_index++) {
         if (g_board[row_index][col] == color) {
             col_counts += 1;
@@ -302,7 +305,7 @@ void calculate_score(const color_t color, const size_t row, const size_t col)
         break;
     }
 
-    for (row_index = (int)row - 1; row_index >= MINIMUM_INDEX; row_index--) {
+    for (row_index = (int)row; row_index >= MINIMUM_INDEX; row_index--) {
         if (g_board[row_index][col] == color) {
             col_counts += 1;
             continue;
@@ -310,7 +313,7 @@ void calculate_score(const color_t color, const size_t row, const size_t col)
         break;
     }
 
-    /* / */
+
     for (col_index = col, row_index = row; col_index < (int)g_col && row_index < (int)g_row; col_index++, row_index++) {
         if (g_board[row_index][col_index] == color) {
             diagonal_counts += 1;
@@ -318,17 +321,15 @@ void calculate_score(const color_t color, const size_t row, const size_t col)
         }
         break;
     }
-
-    for (col_index = (int)col - 1, row_index = (int)row - 1; row_index >= MINIMUM_INDEX && col_index >= MINIMUM_INDEX; col_index--, row_index--) {
+    for (col_index = (int)col, row_index = (int)row; row_index >= MINIMUM_INDEX && col_index >= MINIMUM_INDEX; col_index--, row_index--) {
         if (g_board[row_index][col_index] == color) {
             diagonal_counts += 1;
             continue;
         }
         break;
     }
-
-    /* \ */
-    for (col_index = (int)col - 1, row_index = row + 1; col_index >= MINIMUM_INDEX && row_index < (int)g_row; col_index--, row_index++) {
+    
+    for (col_index = (int)col, row_index = row; col_index >= MINIMUM_INDEX && row_index < (int)g_row; col_index--, row_index++) {
         if (g_board[row_index][col_index] == color) {
             reverse_diagonal_counts += 1;
             continue;
@@ -336,16 +337,16 @@ void calculate_score(const color_t color, const size_t row, const size_t col)
         break;
     }
 
-    for (col_index = col + 1, row_index = (int)row - 1; col_index < (int)g_col && row_index >= MINIMUM_INDEX; col_index++, row_index--) {
+    for (col_index = col, row_index = (int)row; col_index < (int)g_col && row_index >= MINIMUM_INDEX; col_index++, row_index--) {
         if (g_board[row_index][col_index] == color) {
             reverse_diagonal_counts += 1;
             continue;
         }
         break;
     }
+    */
 
-    reverse_diagonal_counts += 1;
-    scores = set_scores(row_counts) + set_scores(col_counts) + set_scores(diagonal_counts) + set_scores(reverse_diagonal_counts);
+    scores = set_scores(row_counts - 1) + set_scores(col_counts - 1) + set_scores(diagonal_counts - 1) + set_scores(reverse_diagonal_counts - 1);
     if (color == COLOR_BLACK) {
         g_black_score += scores;
         return;
