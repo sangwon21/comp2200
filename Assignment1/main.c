@@ -16,11 +16,7 @@ void score_test1(void);
 int main(void)
 {
     init_game();
-
-    assert(is_placeable(0, 0) == TRUE);
-    assert(is_placeable(14, 14) == TRUE);
-    assert(is_placeable(15, 15) == FALSE);
-
+    
     assert(place_stone(COLOR_BLACK, 0, 0) == TRUE);
     assert(place_stone(COLOR_BLACK, 1, 1) == TRUE);
     assert(place_stone(COLOR_BLACK, 2, 2) == TRUE);
@@ -51,7 +47,7 @@ int main(void)
 
     score_test();
     score_test1();
-
+    
     return 0;
 }
 

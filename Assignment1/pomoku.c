@@ -133,27 +133,29 @@ void subtract_scores(const color_t color, const size_t score)
 
 int is_insertable_row(const size_t row)
 {
-    return !(row > g_row || g_row >= G_ROW_MAX_LIMIT || (int)row < MINIMUM_INDEX);
+    return (size_t)MINIMUM_INDEX <= row && row <= g_row && g_row < G_ROW_MAX_LIMIT;
 }
 
 int is_insertable_col(const size_t col)
 {
-    return !(col > g_col || g_col >= G_COL_MAX_LIMIT || (int)col < MINIMUM_INDEX);
+    return (size_t)MINIMUM_INDEX <= col && col <= g_col && g_col < G_COL_MAX_LIMIT;
 }
 
 int is_removable_row(const size_t row)
 {
-    return !(row >= g_row || g_row <= G_ROW_MIN_LIMIT || (int)row < MINIMUM_INDEX);
+    return (size_t)MINIMUM_INDEX <= row && row < g_row && g_row > G_ROW_MIN_LIMIT;
 }
 
 int is_removable_col(const size_t col)
 {
-    return !(col >= g_col || g_col <= G_COL_MIN_LIMIT || (int)col < MINIMUM_INDEX);
+    return (size_t)MINIMUM_INDEX <= col && col < g_col && g_col > G_COL_MIN_LIMIT;
 }
 
 int insert_row(const color_t color, const size_t row)
 {
-    size_t i, col;
+    int i;
+    size_t col;
+
     if (is_insertable_row(row) == FALSE || is_valid_score(color, INSERT_SCORES) == FALSE) {
         return FALSE;
     }
@@ -165,7 +167,7 @@ int insert_row(const color_t color, const size_t row)
         return TRUE;
     }
 
-    for (i = g_row; i >= row; i--) {
+    for (i = (int)g_row; i >= (int)row; i--) {
         for (col = 0; col < g_col; col++) {
             g_board[i][col] = g_board[i - 1][col];
         }
@@ -183,7 +185,7 @@ int insert_row(const color_t color, const size_t row)
 int insert_column(const color_t color, const size_t col)
 {
 
-    size_t i;
+    int i;
     size_t row;
 
     if (is_insertable_col(col) == FALSE || is_valid_score(color, INSERT_SCORES) == FALSE) {
@@ -197,7 +199,7 @@ int insert_column(const color_t color, const size_t col)
         return TRUE;
     }
 
-    for (i = g_col; i >= col; i--) {
+    for (i = (int)g_col; i >= (int)col; i--) {
         for (row = 0; row < g_row; row++) {
             g_board[row][i] = g_board[row][i - 1];
         }
@@ -274,7 +276,6 @@ void calculate_score(const color_t color, const size_t row, const size_t col)
     size_t scores;
 
     /* - */
-
     for (col_index = col; col_index < (int)g_col; col_index++) {
         if (g_board[row][col_index] == color) {
             row_counts += 1;
@@ -292,7 +293,6 @@ void calculate_score(const color_t color, const size_t row, const size_t col)
     }
 
     /* | */
-
     for (row_index = row; row_index < (int)g_row; row_index++) {
         if (g_board[row_index][col] == color) {
             col_counts += 1;
