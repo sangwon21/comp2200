@@ -97,7 +97,7 @@ int place_stone(const color_t color, const size_t row, const size_t col)
     }
 
     g_board[row][col] = color;
-    calculate_score(color, row, col);
+    
 
     return TRUE;
 }
@@ -216,7 +216,8 @@ int insert_column(const color_t color, const size_t col)
 
 int remove_row(const color_t color, const size_t row)
 {
-    size_t i, col;
+    size_t i;
+    size_t col;
 
     if (is_removable_row(row) == FALSE || is_valid_score(color, INSERT_SCORES) == FALSE) {
         return FALSE;
