@@ -79,7 +79,7 @@ int get_color(const size_t row, const size_t col)
 
 int is_placeable(const size_t row, const size_t col)
 {
-    if ( (int)row < MINIMUM_INDEX || (int)col < MINIMUM_INDEX ) {
+    if ((int)row < MINIMUM_INDEX || (int)col < MINIMUM_INDEX) {
         return FALSE;
     }
 
@@ -97,6 +97,10 @@ int is_placeable(const size_t row, const size_t col)
 int place_stone(const color_t color, const size_t row, const size_t col)
 {
     if (is_placeable(row, col) == FALSE) {
+        return FALSE;
+    }
+
+    if (color != COLOR_BLACK && color != COLOR_WHITE) {
         return FALSE;
     }
 
@@ -279,12 +283,12 @@ void calculate_score(const color_t color, const size_t row, const size_t col)
     /*
     int row_index;
     */
-    size_t col_index;
+    int col_index;
 
     size_t scores;
 
     /* - */
-    for (col_index = col; col_index < g_col; ++col_index) {
+    for (col_index = col; col_index < (int)g_col; ++col_index) {
         if (g_board[row][col_index] == color) {
             row_counts += 1;
             continue;
@@ -292,7 +296,7 @@ void calculate_score(const color_t color, const size_t row, const size_t col)
         break;
     }
     
-    for (col_index = col; col_index != (size_t)-1; --col_index) {
+    for (col_index = (int)col; col_index > MINIMUM_INDEX; col_index -= 1) {
         if (g_board[row][col_index] == color) {
             row_counts += 1;
             continue;
