@@ -79,7 +79,7 @@ int get_color(const size_t row, const size_t col)
 
 int is_placeable(const size_t row, const size_t col)
 {
-    if ( (int)row < MINIMUM_INDEX || (int)col < MINIMUM_INDEX) {
+    if ( (int)row < MINIMUM_INDEX || (int)col < MINIMUM_INDEX ) {
         return FALSE;
     }
 
