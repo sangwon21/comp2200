@@ -294,7 +294,7 @@ void calculate_score(const color_t color, const size_t row, const size_t col)
         break;
     }
 
-    for (col_index = col; col_index >=MINIMUM_INDEX; col_index--) {
+    for (col_index = col; col_index >= MINIMUM_INDEX; col_index--) {
         if (g_board[row][col_index] == color) {
             row_counts += 1;
             continue;
