@@ -1,11 +1,10 @@
 #include <stdio.h>
 #include <assert.h>
 #include "pomoku.h"
-#include "test_place_stone_combined.h"
 
 
 int main(void)
 {
-    test_all();
+    place_stone(COLOR_BLACK, 0, 0);
     return 0;
 }
