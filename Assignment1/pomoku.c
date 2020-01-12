@@ -321,8 +321,6 @@ int remove_row(const color_t color, const size_t row)
     size_t i;
     size_t col;
     
-    return FALSE;
-    
     if (is_removable_row(row) == FALSE || is_valid_score(color, INSERT_SCORES) == FALSE) {
         return FALSE;
     }
@@ -347,8 +345,6 @@ int remove_column(const color_t color, const size_t col)
 {
     size_t i;
     size_t row;
-    
-    return FALSE;
 
     if (is_removable_col(col) == FALSE || is_valid_score(color, INSERT_SCORES) == FALSE) {
         return FALSE;
@@ -372,12 +368,12 @@ int remove_column(const color_t color, const size_t col)
 
 int is_valid_row_scope(const size_t row)
 {
-    return 0 <= row && row < g_row;
+    return MINIMUM_INDEX <= (int)row && row < g_row;
 }
 
 int is_valid_col_scope(const size_t col)
 {
-    return 0 <= col && col < g_col;
+    return MINIMUM_INDEX <= (int)col && col < g_col;
 }
 
 int swap_rows(const color_t color, const size_t row0, size_t const row1)
