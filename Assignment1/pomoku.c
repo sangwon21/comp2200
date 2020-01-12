@@ -332,7 +332,7 @@ int remove_row(const color_t color, const size_t row)
     }
 
     for (col = 0; col < g_col; col++) {
-        g_board[g_row - 1][col] = STATUS_PLACEABLE;
+        g_board[g_row - 1][col] = STATUS_NOT_ALLOWED;
     }
 
     subtract_scores(color, REMOVE_SCORES);
@@ -357,7 +357,7 @@ int remove_column(const color_t color, const size_t col)
     }
 
     for (row = 0; row < g_row; row++) {
-        g_board[row][g_col - 1] = STATUS_PLACEABLE;
+        g_board[row][g_col - 1] = STATUS_NOT_ALLOWED;
     }
 
     subtract_scores(color, REMOVE_SCORES);
