@@ -232,30 +232,28 @@ void subtract_scores(const color_t color, const size_t score)
 
 int is_insertable_row(const size_t row)
 {
-    return (size_t)MINIMUM_INDEX <= row && row <= g_row && g_row < G_ROW_MAX_LIMIT;
+    return MINIMUM_INDEX <= (int)row && row <= g_row && g_row < G_ROW_MAX_LIMIT;
 }
 
 int is_insertable_col(const size_t col)
 {
-    return (size_t)MINIMUM_INDEX <= col && col <= g_col && g_col < G_COL_MAX_LIMIT;
+    return MINIMUM_INDEX <= (int)col && col <= g_col && g_col < G_COL_MAX_LIMIT;
 }
 
 int is_removable_row(const size_t row)
 {
-    return (size_t)MINIMUM_INDEX <= row && row < g_row && g_row > G_ROW_MIN_LIMIT;
+    return MINIMUM_INDEX <= (int)row && row < g_row && g_row > G_ROW_MIN_LIMIT;
 }
 
 int is_removable_col(const size_t col)
 {
-    return (size_t)MINIMUM_INDEX <= col && col < g_col && g_col > G_COL_MIN_LIMIT;
+    return MINIMUM_INDEX <= (int)col && col < g_col && g_col > G_COL_MIN_LIMIT;
 }
 
 int insert_row(const color_t color, const size_t row)
 {
     int i;
     size_t col;
-
-    return FALSE;
 
     if (is_insertable_row(row) == FALSE || is_valid_score(color, INSERT_SCORES) == FALSE) {
         return FALSE;
@@ -287,11 +285,8 @@ int insert_row(const color_t color, const size_t row)
 
 int insert_column(const color_t color, const size_t col)
 {
-
     int i;
     size_t row;
-    
-    return FALSE;
     
     if (is_insertable_col(col) == FALSE || is_valid_score(color, INSERT_SCORES) == FALSE) {
         return FALSE;
