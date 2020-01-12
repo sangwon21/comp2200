@@ -295,6 +295,7 @@ void calculate_score(const color_t color, const size_t row, const size_t col)
     }
 
     for (col_index = (int)col; col_index >= 0; col_index--) {
+        prinf("col_index is %d\n", col_index);
         if (g_board[row][col_index] == color) {
             row_counts += 1;
             continue;
