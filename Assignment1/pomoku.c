@@ -279,13 +279,13 @@ void calculate_score(const color_t color, const size_t row, const size_t col)
     size_t col_counts = 0;
     size_t diagonal_counts = 0;
     size_t reverse_diagonal_counts = 0;
-    size_t tmp = 0;
 
     int row_index;    
     int col_index;
 
     size_t scores;
 
+    printf("col_index is %d, col: %d, g_col: %d\n", col_index, col, g_col);
     /* - */
     for (col_index = (int)col; col_index < (int)g_col; ++col_index) {
         if (g_board[row][col_index] == color) {
@@ -295,15 +295,6 @@ void calculate_score(const color_t color, const size_t row, const size_t col)
         break;
     }
 
-    for (col_index = 0; col_index <= (int)col; col_index++) {
-        if (g_board[row][col_index] == color) {
-            tmp += 1;
-            continue;
-        }
-        tmp = 0;
-    }
-
-    row_counts += tmp;
     
     for (row_index = row; row_index < (int)g_row; row_index++) {
         if (g_board[row_index][col] == color) {
