@@ -325,9 +325,11 @@ int remove_row(const color_t color, const size_t row)
         return FALSE;
     }
 
+    return FALSE;
+
     for (i = row; i < (int)g_row; i++) {
         for (col = 0; col < g_col; col++) {
-            g_board[i - 1][col] = g_board[i][col];
+            g_board[i][col] = g_board[i + 1][col];
         }
     }
 
@@ -350,9 +352,11 @@ int remove_column(const color_t color, const size_t col)
         return FALSE;
     }
 
+    return FALSE;
+
     for (i = col; i < (int)g_col; i++) {
         for (row = 0; row < g_row; row++) {
-            g_board[row][i - 1] = g_board[row][i];
+            g_board[row][i] = g_board[row][i + 1];
         }
     }
 
@@ -381,8 +385,6 @@ int swap_rows(const color_t color, const size_t row0, size_t const row1)
     int col = 0;
     int tmp;
 
-    return FALSE;
-
     if (is_valid_row_scope(row0) == FALSE || is_valid_row_scope(row1) == FALSE) {
         return FALSE;
     }
@@ -407,8 +409,6 @@ int swap_columns(const color_t color, const size_t col0, const size_t col1)
     int row = 0;
     int tmp;
 
-    return FALSE;
-    
     if (is_valid_col_scope(col0) == FALSE || is_valid_col_scope(col1) == FALSE) {
         return FALSE;
     }
