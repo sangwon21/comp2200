@@ -16,7 +16,13 @@ void test_place_stone_combined(void);
 
 int main(void)
 {
-    test_place_stone_combined();
+    init_game();
+    place_stone(COLOR_BLACK, -1, -24);
+    place_stone(COLOR_BLACK, -12, -24);
+    place_stone(COLOR_BLACK, -1, 3);
+    place_stone(COLOR_BLACK, 15, 24);
+    place_stone(COLOR_BLACK, 15, 15);
+    place_stone(COLOR_BLACK, 14, 14);
     return 0;
 }
 
