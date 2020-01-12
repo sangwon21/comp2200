@@ -385,6 +385,10 @@ int swap_rows(const color_t color, const size_t row0, size_t const row1)
     int col = 0;
     int tmp;
 
+    if (row0 == row1) {
+        return FALSE;
+    }
+
     if (is_valid_row_scope(row0) == FALSE || is_valid_row_scope(row1) == FALSE) {
         return FALSE;
     }
@@ -409,6 +413,10 @@ int swap_columns(const color_t color, const size_t col0, const size_t col1)
     int row = 0;
     int tmp;
 
+    if (col0 == col1) {
+        return FALSE;
+    }
+
     if (is_valid_col_scope(col0) == FALSE || is_valid_col_scope(col1) == FALSE) {
         return FALSE;
     }
@@ -432,8 +440,9 @@ int copy_row(const color_t color, const size_t src, const size_t dst)
 {
     int col = 0;
 
-    return FALSE;
-    
+    if (src == dst) {
+        return FALSE;
+    }
 
     if (is_valid_row_scope(src) == FALSE || is_valid_row_scope(dst) == FALSE) {
         return FALSE;
@@ -456,7 +465,9 @@ int copy_column(const color_t color, const size_t src, const size_t dst)
 {
     int row = 0;
 
-    return FALSE;
+    if (src == dst) {
+        return FALSE;
+    }
     
     if (is_valid_col_scope(src) == FALSE || is_valid_col_scope(dst) == FALSE) {
         return FALSE;
