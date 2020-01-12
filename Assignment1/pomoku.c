@@ -164,7 +164,7 @@ int insert_row(const color_t color, const size_t row)
 {
     int i;
     size_t col;
-
+    
     if (is_insertable_row(row) == FALSE || is_valid_score(color, INSERT_SCORES) == FALSE) {
         return FALSE;
     }
@@ -173,6 +173,8 @@ int insert_row(const color_t color, const size_t row)
         for (col = 0; col < g_col; col++) {
             g_board[row][col] = STATUS_PLACEABLE;
         }
+        subtract_scores(color, INSERT_SCORES);
+        g_row += 1;
         return TRUE;
     }
 
@@ -205,6 +207,8 @@ int insert_column(const color_t color, const size_t col)
         for (row = 0; row < g_row; row++) {
             g_board[row][col] = STATUS_PLACEABLE;
         }
+        subtract_scores(color, INSERT_SCORES);
+        g_col += 1;
         return TRUE;
     }
 
@@ -310,7 +314,7 @@ void calculate_score(const color_t color, const size_t row, const size_t col)
         break;
     }
     
-    /*
+    
     for (row_index = (int)row; row_index >= MINIMUM_INDEX; row_index--) {
         if (g_board[row_index][col] == color) {
             col_counts += 1;
@@ -350,7 +354,7 @@ void calculate_score(const color_t color, const size_t row, const size_t col)
         }
         break;
     }
-    */
+    
 
     scores = set_scores(row_counts - 1) + set_scores(col_counts - 1) + set_scores(diagonal_counts - 1) + set_scores(reverse_diagonal_counts - 1);
     if (color == COLOR_BLACK) {
