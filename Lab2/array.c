@@ -1,3 +1,4 @@
+#include <limits.h>
 #include "array.h"
 
 const int MINIMUM_INDEX = 0;
@@ -5,7 +6,7 @@ const int MINIMUM_INDEX = 0;
 int get_index_of(const int numbers[], const size_t element_count, const int num) {
     int index;
 
-    if ((int)element_count < MINIMUM_INDEX) {
+    if ((int)element_count <= MINIMUM_INDEX) {
         return -1;
     }
 
@@ -14,14 +15,14 @@ int get_index_of(const int numbers[], const size_t element_count, const int num)
             return index;
         }
     }
-    /*TODO: ELEMENT_COUNT 가 0일 때*/
+
     return -1;
 }
 
 int get_last_index_of(const int numbers[], const size_t element_count, const int num) {
     int index;
 
-    if ((int)element_count < MINIMUM_INDEX) {
+    if ((int)element_count <= MINIMUM_INDEX) {
         return -1;
     }
 
@@ -30,7 +31,7 @@ int get_last_index_of(const int numbers[], const size_t element_count, const int
             return index;
         }
     }
-    /*TODO: ELEMENT_COUNT 가 0일 때*/
+    
     return -1;
 }
 
@@ -106,4 +107,43 @@ int has_even(const int numbers[], const size_t element_count) {
     }
     
     return FALSE;
+}
+
+int insert(int numbers[], const size_t element_count, const int num, const size_t pos) {
+    
+    int index;
+
+    if (element_count < pos) {
+        return FALSE;
+    }
+
+    if (element_count == pos) {
+        numbers[pos] = num;
+        return TRUE;
+    }
+
+    for (index = (int)element_count - 1; index >= (int)pos; index--) {
+        numbers[index + 1] = numbers[index];
+    }
+
+    numbers[pos] = num;
+
+    return TRUE;
+}
+
+int remove_at(int numbers[], const size_t element_count, const size_t index) {
+
+    int pos;
+
+    if (element_count < index + 1) {
+        return FALSE;
+    }
+
+    for (pos = index; pos < (int)element_count; pos++) {
+        numbers[pos] = numbers[pos + 1];
+    }
+    
+    numbers[pos - 1] = INT_MIN;
+
+    return TRUE;
 }
