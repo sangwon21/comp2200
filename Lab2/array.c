@@ -1,7 +1,8 @@
 #include <limits.h>
 #include "array.h"
 
-int get_index_of(const int numbers[], const size_t element_count, const int num){
+int get_index_of(const int numbers[], const size_t element_count, const int num)
+{
     int index;
 
     if ((int)element_count <= 0) {
@@ -17,7 +18,8 @@ int get_index_of(const int numbers[], const size_t element_count, const int num)
     return -1;
 }
 
-int get_last_index_of(const int numbers[], const size_t element_count, const int num){
+int get_last_index_of(const int numbers[], const size_t element_count, const int num)
+{
     int index;
 
     if ((int)element_count <= 0) {
@@ -33,7 +35,8 @@ int get_last_index_of(const int numbers[], const size_t element_count, const int
     return -1;
 }
 
-int get_max_index(const int numbers[], const size_t element_count){
+int get_max_index(const int numbers[], const size_t element_count)
+{
     int max_index;
     int max_number;
     size_t index;
@@ -54,7 +57,8 @@ int get_max_index(const int numbers[], const size_t element_count){
     return max_index;
 }
 
-int get_min_index(const int numbers[], const size_t element_count){
+int get_min_index(const int numbers[], const size_t element_count)
+{
     int min_index;
     int min_number;
     size_t index;
@@ -75,7 +79,8 @@ int get_min_index(const int numbers[], const size_t element_count){
     return min_index;
 }
 
-int is_all_positive(const int numbers[], const size_t element_count){
+int is_all_positive(const int numbers[], const size_t element_count)
+{
     int index;
 
     if ((int)element_count <= 0) {
@@ -91,7 +96,8 @@ int is_all_positive(const int numbers[], const size_t element_count){
     return TRUE;
 }
 
-int has_even(const int numbers[], const size_t element_count){
+int has_even(const int numbers[], const size_t element_count)
+{
     int index;
 
     if ((int)element_count <= 0) {
@@ -107,8 +113,8 @@ int has_even(const int numbers[], const size_t element_count){
     return FALSE;
 }
 
-int insert(int numbers[], const size_t element_count, const int num, const size_t pos){
-    
+int insert(int numbers[], const size_t element_count, const int num, const size_t pos)
+{
     int index;
 
     if (element_count < pos) {
@@ -129,8 +135,8 @@ int insert(int numbers[], const size_t element_count, const int num, const size_
     return TRUE;
 }
 
-int remove_at(int numbers[], const size_t element_count, const size_t index){
-
+int remove_at(int numbers[], const size_t element_count, const size_t index)
+{
     int pos;
 
     if (element_count < index + 1) {
