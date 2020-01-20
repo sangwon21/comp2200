@@ -24,26 +24,26 @@ const char* get_longest_safe_zone_or_null(const char* const cab_start_location, 
     }
 
     for ( ; pos < cab_end_location; pos++) {
-       i = 0;
-       count = 0;
-       for ( ; i < (int)cluster_count; i++) {
-           cluster_pos = (char*)cluster_start_locations[i];
-           if (pos >=  cluster_pos && pos < cluster_pos + cluster_lengths[i]) {
-               count++;
-           }
-       }
-       if (count % 2 == 0 || count == 0) {
-           if (safe_length == 0) {
-               tmp = pos;
-           }
-           safe_length++;
-           continue;
-       }
-       if (safe_length > max_length) {
-           max_length = safe_length;
-           result = tmp;
-       }
-       safe_length = 0;
+        i = 0;
+        count = 0;
+        for ( ; i < (int)cluster_count; i++) {
+            cluster_pos = (char*)cluster_start_locations[i];
+            if (pos >=  cluster_pos && pos < cluster_pos + cluster_lengths[i]) {
+                count++;
+            }
+        }
+        if (count % 2 == 0 || count == 0) {
+            if (safe_length == 0) {
+                tmp = pos;
+            }
+            safe_length++;
+            continue;
+        }
+        if (safe_length > max_length) {
+            max_length = safe_length;
+            result = tmp;
+        }
+        safe_length = 0;
     }
 
     if (safe_length != 0 && safe_length > max_length) {
@@ -64,21 +64,21 @@ int get_travel_time(const char* const cab_start_location, const size_t cab_lengt
     size_t count = 0;
     size_t safe_length = 0;
     size_t unsafe_length = 0;
-
+    
     for ( ; pos < cab_end_location; pos++) {
-       i = 0;
-       count = 0;
-       for ( ; i < (int)cluster_count; i++) {
-           cluster_pos = (char*)cluster_start_locations[i];
-           if (pos >=  cluster_pos && pos < cluster_pos + cluster_lengths[i]) {
-               count++;
-           }
-       }
-       if (count % 2 == 0 || count == 0) {
-           safe_length++;
-           continue;
-       }
-       unsafe_length++;
+        i = 0;
+        count = 0;
+        for ( ; i < (int)cluster_count; i++) {
+            cluster_pos = (char*)cluster_start_locations[i];
+            if (pos >=  cluster_pos && pos < cluster_pos + cluster_lengths[i]) {
+                count++;
+            }
+        }
+        if (count % 2 == 0 || count == 0) {
+            safe_length++;
+            continue;
+        }
+        unsafe_length++;
     }
 
     return (int)(safe_length / 10.0 + unsafe_length / 5.0 + 0.5);
