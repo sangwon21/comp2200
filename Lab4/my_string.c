@@ -71,7 +71,7 @@ void reverse_by_words(char* str)
     }
     if(*(current_position - 1) != ' ') {
         sub_string_end = current_position - 1;
-        for(;sub_string_start < sub_string_end ;sub_string_end--, tmp++){
+        for(;sub_string_start < sub_string_end ;sub_string_end--, sub_string_start++){
             tmp = *sub_string_end;
             *sub_string_end = *sub_string_start;
             *sub_string_start = tmp;
@@ -106,6 +106,11 @@ char* tokenize(char* str, const char* delims)
 {
     char* tokenized_str_start = target_str;
     char* tokenized_str_end = target_str;
+    
+    if(str == NULL && target_str == NULL) {
+        return NULL;
+    }
+
     if(str != NULL)
     {
         target_str = str;
@@ -116,6 +121,7 @@ char* tokenize(char* str, const char* delims)
         *tokenized_str_end = '\0';
         return tokenized_str_start;
     }
+
     if(*target_str == '\0') {
         return target_str;
     }
@@ -123,7 +129,44 @@ char* tokenize(char* str, const char* delims)
     tokenized_str_start = find_sub_str_start(target_str, delims);
     for(target_str = tokenized_str_start + 1; !met_with_delims(target_str, delims); target_str++){
     }
+
     tokenized_str_end = target_str++;
     *tokenized_str_end = '\0';
+    return tokenized_str_start;
+}
+
+char* reverse_tokenize(char* str, const char* delims)
+{
+    char* tokenized_str_start = target_str;
+    char* tokenized_str_end = target_str;
+    
+    if(str == NULL && target_str == NULL) {
+        return NULL;
+    }
+
+    if(str != NULL)
+    {
+        target_str = str;
+        tokenized_str_start = target_str;
+        for(target_str = target_str + 1; !met_with_delims(target_str, delims); target_str++){
+        }
+        tokenized_str_end = target_str++;
+        *tokenized_str_end = '\0';
+        reverse(tokenized_str_start);
+        return tokenized_str_start;
+    }
+    
+    if(*target_str == '\0') {
+        return target_str;
+    }
+
+    tokenized_str_start = find_sub_str_start(target_str, delims);
+    
+    for(target_str = tokenized_str_start + 1; !met_with_delims(target_str, delims); target_str++){
+    }
+    
+    tokenized_str_end = target_str++;
+    *tokenized_str_end = '\0';
+    reverse(tokenized_str_start);
     return tokenized_str_start;
 }
