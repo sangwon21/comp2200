@@ -152,10 +152,10 @@ char* tokenize(char* str, const char* delims)
 char* reverse_tokenize(char* str, const char* delims)
 {
     char* target_str = tokenize(str, delims);
-    if (*target_str == '\0') { 
+    if (target_str == NULL) { 
         return NULL;
     }
-    
+
     reverse(target_str);
     return target_str;
 }
