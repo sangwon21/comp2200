@@ -136,7 +136,7 @@ char* tokenize(char* str, const char* delims)
         return NULL;
     }
     
-    for (s_target_str = tokenized_str_start + 1; *s_target_str != '\0' && !met_with_delims(s_target_str, delims); s_target_str++){
+    for (s_target_str = tokenized_str_start + 1; *s_target_str != '\0' && !met_with_delims(s_target_str, delims); s_target_str++) {
     }
 
     if (*s_target_str == '\0') {
@@ -152,6 +152,10 @@ char* tokenize(char* str, const char* delims)
 char* reverse_tokenize(char* str, const char* delims)
 {
     char* target_str = tokenize(str, delims);
+    if (*target_str == '\0') { 
+        return NULL;
+    }
+    
     reverse(target_str);
     return target_str;
 }
