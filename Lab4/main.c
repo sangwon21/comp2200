@@ -1,9 +1,9 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <assert.h>
 #include <string.h>
 #include <stdio.h>
 #include "my_string.h"
 
-#define _CRT_SECURE_NO_WARNINGS
 
 int main(void)
 {
