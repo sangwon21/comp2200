@@ -33,6 +33,11 @@ int index_of(const char* str, const char* word)
     const char* str_start = str;
     const char* word_start = word;
     const char* tmp;
+    
+    if (*word == '\0') {
+        return str_start - str;
+    }
+
     for (; *str_start != '\0'; str_start++) {
         if(*str_start == *word_start) {
             tmp = str_start;
