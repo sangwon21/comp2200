@@ -2,6 +2,8 @@
 #include "my_string.h"
 #include <stdio.h>
 
+char* target_str = NULL;
+
 int my_strlen(const char* str)
 {
     int length = 0;
@@ -75,4 +77,53 @@ void reverse_by_words(char* str)
             *sub_string_start = tmp;
         }
     }
+}
+
+int met_with_delims(const char* target_char, const char* delims)
+{
+    for(; *delims != '\0'; delims++) {
+        if(*delims == *target_char) {
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+char* find_sub_str_start(char* target_char, const char* delims)
+{
+    const char* delims_ptr = delims;
+    for(;*target_char != '\0'; target_char++){
+        if(!met_with_delims(target_char, delims)){
+            return target_char;
+        }
+        delims_ptr = delims;
+    }
+    return target_char;
+}
+
+char* tokenize(char* str, const char* delims)
+{
+    char* tokenized_str_start = target_str;
+    char* tokenized_str_end = target_str;
+    if(str != NULL)
+    {
+        target_str = str;
+        tokenized_str_start = target_str;
+        for(target_str = target_str + 1; !met_with_delims(target_str, delims); target_str++){
+        }
+        tokenized_str_end = target_str++;
+        *tokenized_str_end = '\0';
+        return tokenized_str_start;
+    }
+    if(*target_str == '\0') {
+        return target_str;
+    }
+
+    tokenized_str_start = find_sub_str_start(target_str, delims);
+    for(target_str = tokenized_str_start + 1; !met_with_delims(target_str, delims); target_str++){
+    }
+    tokenized_str_end = target_str++;
+    *tokenized_str_end = '\0';
+    return tokenized_str_start;
 }
