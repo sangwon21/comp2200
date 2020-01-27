@@ -37,7 +37,7 @@ int index_of(const char* str, const char* word)
     }
 
     for (; *str_start != '\0'; str_start++) {
-        if(*str_start == *word_start) {
+        if (*str_start == *word_start) {
             tmp = str_start;
             for (; *word_start != '\0'; word_start++, tmp++) {
                 if (*tmp != *word_start) {
@@ -60,11 +60,11 @@ void reverse_by_words(char* str)
     char tmp;
     
     for (; *current_position != '\0'; current_position++) {
-        if (*current_position != ' '){
+        if (*current_position != ' ') {
             continue;
         }
         sub_string_end = current_position - 1;
-        for (;sub_string_start < sub_string_end ;sub_string_end--, sub_string_start++) {
+        for (; sub_string_start < sub_string_end ; sub_string_end--, sub_string_start++) {
             tmp = *sub_string_end;
             *sub_string_end = *sub_string_start;
             *sub_string_start = tmp;
@@ -73,7 +73,7 @@ void reverse_by_words(char* str)
     }
     if (*(current_position - 1) != ' ') {
         sub_string_end = current_position - 1;
-        for (;sub_string_start < sub_string_end ;sub_string_end--, sub_string_start++) {
+        for (; sub_string_start < sub_string_end ; sub_string_end--, sub_string_start++) {
             tmp = *sub_string_end;
             *sub_string_end = *sub_string_start;
             *sub_string_start = tmp;
@@ -95,7 +95,7 @@ int met_with_delims(const char* target_char, const char* delims)
 char* find_sub_str_start(char* target_char, const char* delims)
 {
     const char* delims_ptr = delims;
-    for (;*target_char != '\0'; target_char++) {
+    for (; *target_char != '\0'; target_char++) {
         if (!met_with_delims(target_char, delims)) {
             return target_char;
         }
@@ -106,46 +106,46 @@ char* find_sub_str_start(char* target_char, const char* delims)
 
 char* tokenize(char* str, const char* delims)
 {
-    static char* target_str = NULL;
-    char* tokenized_str_start = target_str;
-    char* tokenized_str_end = target_str;
-    if (str == NULL && target_str == NULL) {
+    static char* s_target_str = NULL;
+    char* tokenized_str_start = s_target_str;
+    char* tokenized_str_end = s_target_str;
+    if (str == NULL && s_target_str == NULL) {
         return NULL;
     }
 
     if (str != NULL) {
-        target_str = str;
-        tokenized_str_start = target_str;
-        for (; *target_str != '\0' && !met_with_delims(target_str, delims); target_str++){
+        s_target_str = str;
+        tokenized_str_start = s_target_str;
+        for (; *s_target_str != '\0' && !met_with_delims(s_target_str, delims); s_target_str++) {
         }
-        if(*target_str == '\0') {
+        if (*s_target_str == '\0') {
             return NULL;
         }
-        tokenized_str_end = target_str++;
+        tokenized_str_end = s_target_str++;
         *tokenized_str_end = '\0';
         return tokenized_str_start;
     }
 
-    if (*target_str == '\0') {
+    if (*s_target_str == '\0') {
         return NULL;
     }
 
-    tokenized_str_start = find_sub_str_start(target_str, delims);
+    tokenized_str_start = find_sub_str_start(s_target_str, delims);
 
-    if(*tokenized_str_start == '\0') {
+    if (*tokenized_str_start == '\0') {
         return NULL;
     }
     
-    for (target_str = tokenized_str_start + 1; !met_with_delims(target_str, delims); target_str++){
+    for (s_target_str = tokenized_str_start + 1; *s_target_str != '\0' && !met_with_delims(s_target_str, delims); s_target_str++){
     }
 
-    if (*target_str == '\0') {
+    if (*s_target_str == '\0') {
         return tokenized_str_start;
     }
 
-    tokenized_str_end = target_str++;
+    tokenized_str_end = s_target_str++;
     *tokenized_str_end = '\0';
-    
+
     return tokenized_str_start;
 }
 
