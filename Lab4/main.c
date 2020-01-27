@@ -7,7 +7,7 @@
 
 int main(void)
 {
-    const char* str = "We all live in a yellow submarine";
+const char* str = "We all live in a yellow submarine";
     char str_cpy[34];
     const char* token;
 
@@ -56,8 +56,6 @@ int main(void)
     token = reverse_tokenize(NULL, " ");
     assert(token == str_cpy + 17);
     assert(strcmp(token, "wolley") == 0);
-
-    return 0;
 
     return 0;
 }

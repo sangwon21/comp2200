@@ -1,8 +1,6 @@
 #include "my_string.h"
 #include <stdio.h>
 
-char* g_target_str = NULL;
-
 int my_strlen(const char* str)
 {
     int length = 0;
@@ -108,67 +106,52 @@ char* find_sub_str_start(char* target_char, const char* delims)
 
 char* tokenize(char* str, const char* delims)
 {
-    char* tokenized_str_start = g_target_str;
-    char* tokenized_str_end = g_target_str;
-    
-    if (str == NULL && g_target_str == NULL) {
+    static char* target_str = NULL;
+    char* tokenized_str_start = target_str;
+    char* tokenized_str_end = target_str;
+    if (str == NULL && target_str == NULL) {
         return NULL;
     }
 
     if (str != NULL) {
-        g_target_str = str;
-        tokenized_str_start = g_target_str;
-        for (g_target_str = g_target_str + 1; !met_with_delims(g_target_str, delims); g_target_str++){
+        target_str = str;
+        tokenized_str_start = target_str;
+        for (; *target_str != '\0' && !met_with_delims(target_str, delims); target_str++){
         }
-        tokenized_str_end = g_target_str++;
+        if(*target_str == '\0') {
+            return NULL;
+        }
+        tokenized_str_end = target_str++;
         *tokenized_str_end = '\0';
         return tokenized_str_start;
     }
 
-    if (*g_target_str == '\0') {
-        return g_target_str;
+    if (*target_str == '\0') {
+        return NULL;
     }
 
-    tokenized_str_start = find_sub_str_start(g_target_str, delims);
-    for (g_target_str = tokenized_str_start + 1; !met_with_delims(g_target_str, delims); g_target_str++){
+    tokenized_str_start = find_sub_str_start(target_str, delims);
+
+    if(*tokenized_str_start == '\0') {
+        return NULL;
+    }
+    
+    for (target_str = tokenized_str_start + 1; !met_with_delims(target_str, delims); target_str++){
     }
 
-    tokenized_str_end = g_target_str++;
+    if (*target_str == '\0') {
+        return tokenized_str_start;
+    }
+
+    tokenized_str_end = target_str++;
     *tokenized_str_end = '\0';
+    
     return tokenized_str_start;
 }
 
 char* reverse_tokenize(char* str, const char* delims)
 {
-    char* tokenized_str_start = g_target_str;
-    char* tokenized_str_end = g_target_str;
-    
-    if (str == NULL && g_target_str == NULL) {
-        return NULL;
-    }
-
-    if (str != NULL) {
-        g_target_str = str;
-        tokenized_str_start = g_target_str;
-        for (g_target_str = g_target_str + 1; !met_with_delims(g_target_str, delims); g_target_str++){
-        }
-        tokenized_str_end = g_target_str++;
-        *tokenized_str_end = '\0';
-        reverse(tokenized_str_start);
-        return tokenized_str_start;
-    }
-    
-    if (*g_target_str == '\0') {
-        return g_target_str;
-    }
-
-    tokenized_str_start = find_sub_str_start(g_target_str, delims);
-    
-    for (g_target_str = tokenized_str_start + 1; !met_with_delims(g_target_str, delims); g_target_str++){
-    }
-    
-    tokenized_str_end = g_target_str++;
-    *tokenized_str_end = '\0';
-    reverse(tokenized_str_start);
-    return tokenized_str_start;
+    char* target_str = tokenize(str, delims);
+    reverse(target_str);
+    return target_str;
 }
