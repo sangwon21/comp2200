@@ -42,11 +42,11 @@ void translate_line(const char* char_from, const char* char_to, char* line, int 
                 if (result == NOT_A_LETTER) {
                     break;
                 }
-                if (result == UPPER_CASE && *tmp + DIFFERENCE_BETWEEN_UPPER_AND_LOWER == (*line)) {
+                if (result == UPPER_CASE && *tmp + DIFFERENCE_BETWEEN_UPPER_AND_LOWER == *line) {
                     *line = *(char_to + (tmp - char_from));
                     break;
                 }
-                if (*tmp - DIFFERENCE_BETWEEN_UPPER_AND_LOWER == *line) {
+                if (result == LOWER_CASE && *tmp - DIFFERENCE_BETWEEN_UPPER_AND_LOWER == *line) {
                     *line = *(char_to + (tmp - char_from));
                     break;
                 }
