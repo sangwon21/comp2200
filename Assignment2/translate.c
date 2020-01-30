@@ -324,7 +324,7 @@ int translate(int argc, const char** argv)
         return ERROR_CODE_WRONG_ARGUMENTS_NUMBER;
     }
 
-    if (argc == WITH_IGNORE_FLAG_LENGTH && (strlen(argv[1]) < 2 || argv[1][0] != '-' )) {
+    if (argc == WITH_IGNORE_FLAG_LENGTH && (strlen(argv[1]) < 2 || argv[1][0] != '-')) {
         return ERROR_CODE_INVALID_FORMAT;
     }
 
