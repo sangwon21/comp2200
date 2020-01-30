@@ -156,7 +156,7 @@ int translate_escape_letter_and_scope(char* dest, char* src, int* src_length, in
     char minimum_scope_char = NULL_CHAR;
     char escape_letter = NULL_CHAR;
     char maximum_scope_char = NULL_CHAR;
-
+    
     for (; index < *src_length; index++) {
         if (is_scope == TRUE) {
             maximum_scope_ptr = src + index;
@@ -166,6 +166,7 @@ int translate_escape_letter_and_scope(char* dest, char* src, int* src_length, in
                 index++;
                 escape_letter = return_escape_letter(src[index]);
                 if (escape_letter == -1) {
+                    *is_error = TRUE;
                     return ERROR_CODE_INVALID_FORMAT;
                 }
                 maximum_scope_ptr++;
@@ -184,6 +185,7 @@ int translate_escape_letter_and_scope(char* dest, char* src, int* src_length, in
             index++;
             escape_letter = return_escape_letter(src[index]);
             if (escape_letter == -1) {
+                *is_error = TRUE;
                 return ERROR_CODE_INVALID_FORMAT;
             }
             dest[dest_length++] = escape_letter;
