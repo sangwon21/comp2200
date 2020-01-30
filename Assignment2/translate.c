@@ -317,9 +317,14 @@ int translate(int argc, const char** argv)
     if (argc == WITH_IGNORE_FLAG_LENGTH) {
         ignore_flag = TRUE;
     }
-    
+
     set_from_length = argc == DEFAULT_ARGC ? strlen(argv[1]) : strlen(argv[2]);
     set_to_length = argc == DEFAULT_ARGC ? strlen(argv[2]) : strlen(argv[2]);
+
+    if (set_from_length > ARGUMENT_LENGTH || set_to_length > ARGUMENT_LENGTH) {
+        return ERROR_CODE_ARGUMENT_TOO_LONG;
+    }
+
     user_set_from = argc == DEFAULT_ARGC ? user_input[1] : user_input[2];
     user_set_to = argc == DEFAULT_ARGC ? user_input[2] : user_input[3];
 
