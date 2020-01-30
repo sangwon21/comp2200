@@ -59,7 +59,6 @@ void translate_line(const char* char_from, const char* char_to, char* line, int 
 int is_valid_escape_letter(char letter) 
 {
     char escape_letters[] = "\\abfnrtv'\"";
-    
     char* ptr_escape_letters = escape_letters;
     
     while (*ptr_escape_letters != '\0') {
@@ -72,43 +71,41 @@ int is_valid_escape_letter(char letter)
     return FALSE;
 }
 
+int return_escape_letter(char letter) 
+{
+    switch (letter) {
+    case '\\':
+        return '\\';
+    case 'a':
+        return '\a';
+    case 'b':
+        return '\b';
+    case 'f':
+        return '\f';
+    case 'n':
+        return '\n';
+    case 'r':
+        return '\r';
+    case 't':
+        return '\t';
+    case 'v':
+        return '\v';
+    case '\'':
+        return '\'';
+    case '\"':
+        return '\"';
+    default: 
+        return -1;
+    }
+}
+
 int try_put_escape_letter(char letter, char* dest, int* dest_length)
 {
-    switch(letter){
-    case '\\':
-        dest[*dest_length] = '\\';
-        break;
-    case 'a':
-        dest[*dest_length] = '\a';
-        break;
-    case 'b':
-        dest[*dest_length] = '\b';
-        break;
-    case 'f':
-        dest[*dest_length] = '\f';
-        break;
-    case 'n':
-        dest[*dest_length] = '\n';
-        break;
-    case 'r':
-        dest[*dest_length] = '\r';
-        break;
-    case 't':
-        dest[*dest_length] = '\t';
-        break;
-    case 'v':
-        dest[*dest_length] = '\v';
-        break;
-    case '\'':
-        dest[*dest_length] = '\'';
-        break;
-    case '\"':
-        dest[*dest_length] = '\"';
-        break;
-    default: 
+    int result = return_escape_letter(letter);
+    if (result == -1) {
         return FALSE;
     }
-
+    dest[*dest_length] = result;
     (*dest_length)++;
     
     return TRUE;
@@ -143,29 +140,39 @@ int try_put_letters_in_scope(char minimum_scope_char, char maximum_scope_char, c
     return TRUE;
 }
 
+int is_escape_letter(char letter)
+{
+    return letter == '\\' || letter == '\a' || letter == '\b' || letter == '\f' || letter == '\n' || letter == '\r' || letter == '\t' || letter == '\v' || letter == '\'' || letter == '\"';    
+}
+
 int translate_escape_letter_and_scope(char* dest, char* src, int* src_length, int* is_error)
 {
     int index = 0;
-    int is_escape = FALSE;
     char* minimum_scope_ptr = NULL;
     char* maximum_scope_ptr = NULL;
     int is_scope = FALSE;
     int dest_length = 0;
     int error_type = 0;
+    char minimum_scope_char = NULL_CHAR;
+    char escape_letter = NULL_CHAR;
+    char maximum_scope_char = NULL_CHAR;
 
     for (; index < *src_length; index++) {
-        if (is_escape == TRUE) {
-            is_escape = FALSE;
-            if (try_put_escape_letter(src[index], dest, &dest_length) == FALSE) {
-                *is_error = TRUE;
-                return ERROR_CODE_INVALID_FORMAT;
-            }
-            continue;
-        }
-
         if (is_scope == TRUE) {
             maximum_scope_ptr = src + index;
-            if (try_put_letters_in_scope(*minimum_scope_ptr, *maximum_scope_ptr, dest, &dest_length, &error_type) == FALSE) {
+            maximum_scope_char = *maximum_scope_ptr;
+
+            if (*maximum_scope_ptr == '\\') {
+                index++;
+                escape_letter = return_escape_letter(src[index]);
+                if (escape_letter == -1) {
+                    return ERROR_CODE_INVALID_FORMAT;
+                }
+                maximum_scope_ptr++;
+                maximum_scope_char = escape_letter;
+            }
+
+            if (try_put_letters_in_scope(minimum_scope_char, maximum_scope_char, dest, &dest_length, &error_type) == FALSE) {
                 *is_error = TRUE;
                 return error_type;
             }
@@ -174,7 +181,12 @@ int translate_escape_letter_and_scope(char* dest, char* src, int* src_length, in
         }
         
         if (src[index] == '\\') {
-            is_escape = TRUE;
+            index++;
+            escape_letter = return_escape_letter(src[index]);
+            if (escape_letter == -1) {
+                return ERROR_CODE_INVALID_FORMAT;
+            }
+            dest[dest_length++] = escape_letter;
             continue;
         }
 
@@ -193,6 +205,10 @@ int translate_escape_letter_and_scope(char* dest, char* src, int* src_length, in
                 is_scope = TRUE;
                 dest_length--;
                 minimum_scope_ptr = src + (index - 1);
+                minimum_scope_char = *minimum_scope_ptr;
+                if (is_escape_letter(dest[dest_length]) == TRUE) {
+                    minimum_scope_char = dest[dest_length];
+                }
             }
             continue;
         }
@@ -321,7 +337,7 @@ int translate(int argc, const char** argv)
     set_from_length = argc == DEFAULT_ARGC ? strlen(argv[1]) : strlen(argv[2]);
     set_to_length = argc == DEFAULT_ARGC ? strlen(argv[2]) : strlen(argv[2]);
 
-    if (set_from_length > ARGUMENT_LENGTH || set_to_length > ARGUMENT_LENGTH) {
+    if (set_from_length >= ARGUMENT_LENGTH || set_to_length >= ARGUMENT_LENGTH) {
         return ERROR_CODE_ARGUMENT_TOO_LONG;
     }
 
