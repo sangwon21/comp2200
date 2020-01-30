@@ -5,11 +5,11 @@
 #define FALSE (0)
 
 typedef enum error_code {
-    WRONG_ARGUMENTS_NUMBER = 1,
-    INVALID_FLAG,
-    INVALID_FORMAT,
-    ARGUMENT_TOO_LONG,
-    INVALID_RANGE
+    ERROR_CODE_WRONG_ARGUMENTS_NUMBER = 1,
+    ERROR_CODE_INVALID_FLAG,
+    ERROR_CODE_INVALID_FORMAT,
+    ERROR_CODE_ARGUMENT_TOO_LONG,
+    ERROR_CODE_INVALID_RANGE
 } error_code_t;
 
 int translate(int argc, const char** argv);

@@ -132,12 +132,12 @@ int try_put_letters_in_scope(char minimum_scope_char, char maximum_scope_char, c
     }
 
     if (range + *dest_length > ARGUMENT_LENGTH) {
-        *error_type = ARGUMENT_TOO_LONG;
+        *error_type = ERROR_CODE_ARGUMENT_TOO_LONG;
         return FALSE;
     }
 
     if (minimum_scope_char > maximum_scope_char) {
-        *error_type = INVALID_RANGE;
+        *error_type = ERROR_CODE_INVALID_RANGE;
         return FALSE;
     }
 
@@ -164,7 +164,7 @@ int translate_escape_letter_and_scope(char* dest, char* src, int src_length, int
             is_escape = FALSE;
             if (try_put_escape_letter(src[index], dest, &dest_length) == FALSE) {
                 *is_error = TRUE;
-                return INVALID_FORMAT;
+                return ERROR_CODE_INVALID_FORMAT;
             }
             continue;
         }
@@ -307,15 +307,15 @@ int translate(int argc, const char** argv)
     char set_to[ARGUMENT_LENGTH];
 
     if (argc != 3 && argc != 4) {
-        return WRONG_ARGUMENTS_NUMBER;
+        return ERROR_CODE_WRONG_ARGUMENTS_NUMBER;
     }
 
     if (argc == 4 && (strlen(argv[1]) < 2 || argv[1][0] != '-' )) {
-        return INVALID_FORMAT;
+        return ERROR_CODE_INVALID_FORMAT;
     }
 
     if (argc == 4 && (strlen(argv[1]) > 2 || argv[1][1] != 'i')) {
-        return INVALID_FLAG;
+        return ERROR_CODE_INVALID_FLAG;
     }
     
     set_from_result = translate_escape_letter_and_scope(set_from, user_set_from, set_from_length, &is_error);
