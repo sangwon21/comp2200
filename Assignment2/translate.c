@@ -1,4 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <string.h>
 #include "translate.h"
@@ -158,7 +157,6 @@ int translate_escape_letter_and_scope(char* dest, char* src, int src_length, int
     char* maximum_scope_ptr = NULL;
     int is_scope = FALSE;
     int dest_length = 0;
-    int result = 0;
     int error_type = 0;
 
     for (; index < src_length; index++) {
@@ -302,7 +300,6 @@ int translate(int argc, const char** argv)
     char* user_set_to = argc == DEFAULT_ARGC ? user_input[2] : user_input[3];
     int set_from_result = 0;
     int set_to_result = 0;
-    int ignore_flag = FALSE;
 
     char line[LINE_LENGTH];
 
