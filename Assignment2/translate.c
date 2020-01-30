@@ -5,58 +5,52 @@
 #define LINE_LENGTH (512)
 #define ARGUMENT_LENGTH  (512)
 #define ASCII_CODE_LENGTH (128)
+#define UPPER_CASE (2)
+#define LOWER_CASE (1)
+#define NOT_A_LETTER (0)
+#define DIFFERENCE_BETWEEN_UPPER_AND_LOWER (32)
+#define NULL_CHAR ('\0')
+#define WITHOUT_IGNORE_FLAG_LENGTH (3)
+#define WITH_IGNORE_FLAG_LENGTH (4)
 
-void translate_line(const char* char_from, const char* char_to, char* line)
-{
-    const char* tmp = char_from;
-    for (; *line != '\0' ; line++) {
-        for (; *tmp != '\0'; tmp++) {
-            if (*tmp == *line) {
-                *line = *(char_to + (tmp - char_from));
-                break;
-            }
-        }
-        tmp = char_from;
-    }
-}
 
 int tell_letter_case(char letter) 
 {
     if (letter >= 'A' && letter <= 'Z') {
-        return 2;
+        return UPPER_CASE;
     }
 
     if (letter >= 'a' && letter <= 'z') {
-        return 1;
+        return LOWER_CASE;
     }
 
-    return 0;
+    return NOT_A_LETTER;
 }
 
-void translate_line_ignore_cases(const char* char_from, const char* char_to, char* line)
+void translate_line(const char* char_from, const char* char_to, char* line, int ignore_flag)
 {
     const char* tmp = char_from;
     int result;
-    for (; *line != '\0' ; line++) {
-        for (; *tmp != '\0'; tmp++) {
+    for (; *line != NULL_CHAR; line++) {
+        for (; *tmp != NULL_CHAR; tmp++) {
             if (*tmp == *line) {
                 *line = *(char_to + (tmp - char_from));
                 break;
             }
-            
-            result = tell_letter_case(*tmp);
-            if (result == 0) {
-                break;
+            if (ignore_flag == TRUE) {
+                result = tell_letter_case(*tmp);
+                if (result == NOT_A_LETTER) {
+                    break;
+                }
+                if (result == UPPER_CASE && *tmp + DIFFERENCE_BETWEEN_UPPER_AND_LOWER == (*line)) {
+                    *line = *(char_to + (tmp - char_from));
+                    break;
+                }
+                if (*tmp - DIFFERENCE_BETWEEN_UPPER_AND_LOWER == *line) {
+                    *line = *(char_to + (tmp - char_from));
+                    break;
+                }
             }
-            if (result == 2 && *tmp + 32 == (*line)) {
-                *line = *(char_to + (tmp - char_from));
-                break;
-            }
-            if (*tmp - 32 == *line) {
-                *line = *(char_to + (tmp - char_from));
-                break;
-            }
-            
         }
         tmp = char_from;
     }
@@ -81,38 +75,38 @@ int is_valid_escape_letter(char letter)
 int try_put_escape_letter(char letter, char* dest, int* dest_length)
 {
     switch(letter){
-        case '\\':
-            dest[*dest_length] = '\\';
-            break;
-        case 'a':
-            dest[*dest_length] = '\a';
-            break;
-        case 'b':
-            dest[*dest_length] = '\b';
-            break;
-        case 'f':
-            dest[*dest_length] = '\f';
-            break;
-        case 'n':
-            dest[*dest_length] = '\n';
-            break;
-        case 'r':
-            dest[*dest_length] = '\r';
-            break;
-        case 't':
-            dest[*dest_length] = '\t';
-            break;
-        case 'v':
-            dest[*dest_length] = '\v';
-            break;
-        case '\'':
-            dest[*dest_length] = '\'';
-            break;
-        case '\"':
-            dest[*dest_length] = '\"';
-            break;
-        default: 
-            return FALSE;
+    case '\\':
+        dest[*dest_length] = '\\';
+        break;
+    case 'a':
+        dest[*dest_length] = '\a';
+        break;
+    case 'b':
+        dest[*dest_length] = '\b';
+        break;
+    case 'f':
+        dest[*dest_length] = '\f';
+        break;
+    case 'n':
+        dest[*dest_length] = '\n';
+        break;
+    case 'r':
+        dest[*dest_length] = '\r';
+        break;
+    case 't':
+        dest[*dest_length] = '\t';
+        break;
+    case 'v':
+        dest[*dest_length] = '\v';
+        break;
+    case '\'':
+        dest[*dest_length] = '\'';
+        break;
+    case '\"':
+        dest[*dest_length] = '\"';
+        break;
+    default: 
+        return FALSE;
     }
 
     (*dest_length)++;
@@ -149,7 +143,7 @@ int try_put_letters_in_scope(char minimum_scope_char, char maximum_scope_char, c
     return TRUE;
 }
 
-int translate_escape_letter_and_scope(char* dest, char* src, int src_length, int* is_error)
+int translate_escape_letter_and_scope(char* dest, char* src, int* src_length, int* is_error)
 {
     int index = 0;
     int is_escape = FALSE;
@@ -159,7 +153,7 @@ int translate_escape_letter_and_scope(char* dest, char* src, int src_length, int
     int dest_length = 0;
     int error_type = 0;
 
-    for (; index < src_length; index++) {
+    for (; index < *src_length; index++) {
         if (is_escape == TRUE) {
             is_escape = FALSE;
             if (try_put_escape_letter(src[index], dest, &dest_length) == FALSE) {
@@ -185,7 +179,7 @@ int translate_escape_letter_and_scope(char* dest, char* src, int src_length, int
         }
 
         if (src[index] == '-') {
-            if (index == 0 || index == src_length - 1) {
+            if (index == 0 || index == *src_length - 1) {
                 dest[dest_length++] = src[index];
                 continue;
             }
@@ -206,9 +200,10 @@ int translate_escape_letter_and_scope(char* dest, char* src, int src_length, int
         dest[dest_length++] = src[index];
     }
 
-    dest[dest_length] = '\0';
+    dest[dest_length] = NULL_CHAR;
     
-    return dest_length;
+    *src_length = dest_length;
+    return NO_ERROR;
 }
 
 int find_in_used_letters(char* used_letters, int used_letters_length, char letter)
@@ -255,8 +250,8 @@ void shrink_sets(char* set_from, char* set_to, int* set_from_length, int* set_to
             shrinked_set_to[shrinked_set_to_length++] = set_to[index];
         }
     }
-    shrinked_set_to[shrinked_set_to_length] = '\0';
-    shrinked_set_from[shrinked_set_from_length] = '\0';
+    shrinked_set_to[shrinked_set_to_length] = NULL_CHAR;
+    shrinked_set_from[shrinked_set_from_length] = NULL_CHAR;
 
     reverse_string(shrinked_set_from, shrinked_set_from_length);
     reverse_string(shrinked_set_to, shrinked_set_to_length);
@@ -271,10 +266,10 @@ void translate_sets(char* set_from, char* set_to, int* set_from_length, int* set
 {
 
     int index = 0;
-    char last_char = '\0';
+    char last_char = NULL_CHAR;
     if (*set_from_length < *set_to_length) {
         *set_to_length = *set_from_length;
-        set_to[*set_to_length] = '\0';
+        set_to[*set_to_length] = NULL_CHAR;
     }
 
     if (*set_from_length > *set_to_length) {
@@ -282,7 +277,7 @@ void translate_sets(char* set_from, char* set_to, int* set_from_length, int* set
         for (index = *set_to_length; index < *set_from_length; index++) {
             set_to[index] = last_char;
         }
-        set_to[index] = '\0';
+        set_to[index] = NULL_CHAR;
         *set_to_length = *set_from_length;
     }
 
@@ -292,51 +287,60 @@ void translate_sets(char* set_from, char* set_to, int* set_from_length, int* set
 int translate(int argc, const char** argv)
 {
     const int DEFAULT_ARGC = 3;
-    int set_from_length = argc == DEFAULT_ARGC ? strlen(argv[1]) : strlen(argv[2]);
-    int set_to_length = argc == DEFAULT_ARGC ? strlen(argv[2]) : strlen(argv[2]);
+    int set_from_length = 0;
+    int set_to_length = 0;
     int is_error = FALSE;
     char** user_input = (char**)argv;
-    char* user_set_from = argc == DEFAULT_ARGC ? user_input[1] : user_input[2];
-    char* user_set_to = argc == DEFAULT_ARGC ? user_input[2] : user_input[3];
+    char* user_set_from = NULL;
+    char* user_set_to = NULL;
     int set_from_result = 0;
     int set_to_result = 0;
+    int ignore_flag = FALSE;
 
     char line[LINE_LENGTH];
 
     char set_from[ARGUMENT_LENGTH];
     char set_to[ARGUMENT_LENGTH];
 
-    if (argc != 3 && argc != 4) {
+    if (argc != WITH_IGNORE_FLAG_LENGTH && argc != WITHOUT_IGNORE_FLAG_LENGTH) {
         return ERROR_CODE_WRONG_ARGUMENTS_NUMBER;
     }
 
-    if (argc == 4 && (strlen(argv[1]) < 2 || argv[1][0] != '-' )) {
+    if (argc == WITH_IGNORE_FLAG_LENGTH && (strlen(argv[1]) < 2 || argv[1][0] != '-' )) {
         return ERROR_CODE_INVALID_FORMAT;
     }
 
-    if (argc == 4 && (strlen(argv[1]) > 2 || argv[1][1] != 'i')) {
+    if (argc == WITH_IGNORE_FLAG_LENGTH && (strlen(argv[1]) > 2 || argv[1][1] != 'i')) {
         return ERROR_CODE_INVALID_FLAG;
     }
+
+    if (argc == WITH_IGNORE_FLAG_LENGTH) {
+        ignore_flag = TRUE;
+    }
     
-    set_from_result = translate_escape_letter_and_scope(set_from, user_set_from, set_from_length, &is_error);
+    set_from_length = argc == DEFAULT_ARGC ? strlen(argv[1]) : strlen(argv[2]);
+    set_to_length = argc == DEFAULT_ARGC ? strlen(argv[2]) : strlen(argv[2]);
+    user_set_from = argc == DEFAULT_ARGC ? user_input[1] : user_input[2];
+    user_set_to = argc == DEFAULT_ARGC ? user_input[2] : user_input[3];
+
+    set_from_result = translate_escape_letter_and_scope(set_from, user_set_from, &set_from_length, &is_error);
     if (is_error == TRUE) {
         return set_from_result;
     }
 
-    set_to_result = translate_escape_letter_and_scope(set_to, user_set_to, set_to_length, &is_error);
+    set_to_result = translate_escape_letter_and_scope(set_to, user_set_to, &set_to_length, &is_error);
     if (is_error == TRUE) {
         return set_to_result;
     }
 
-    translate_sets(set_from, set_to, &set_from_result, &set_to_result);
-    
+    translate_sets(set_from, set_to, &set_from_length, &set_to_length);
     
     while (TRUE) {
         if (fgets(line, LINE_LENGTH, stdin) == NULL) {
             clearerr(stdin);
             break;
         }
-        argc == DEFAULT_ARGC ? translate_line(set_from, set_to, line) : translate_line_ignore_cases(set_from, set_to, line);
+        translate_line(set_from, set_to, line, ignore_flag);
         fprintf(stdout, "%s", line);
     }
 
