@@ -37,16 +37,16 @@ void translate_line(const char* char_from, const char* char_to, char* line, int 
                 *line = *(char_to + (tmp - char_from));
                 break;
             }
-            if (ignore_flag == TRUE) {
-                result = tell_letter_case(*tmp);
+            if (ignore_flag == TRUE) {    
+                result = tell_letter_case(*line);
                 if (result == NOT_A_LETTER) {
-                    break;
+                    continue;
                 }
-                if (result == UPPER_CASE && *tmp + DIFFERENCE_BETWEEN_UPPER_AND_LOWER == *line) {
+                if (result == LOWER_CASE && *tmp + DIFFERENCE_BETWEEN_UPPER_AND_LOWER == *line) {
                     *line = *(char_to + (tmp - char_from));
                     break;
                 }
-                if (result == LOWER_CASE && *tmp - DIFFERENCE_BETWEEN_UPPER_AND_LOWER == *line) {
+                if (result == UPPER_CASE && *tmp - DIFFERENCE_BETWEEN_UPPER_AND_LOWER == *line) {
                     *line = *(char_to + (tmp - char_from));
                     break;
                 }
@@ -357,7 +357,7 @@ int translate(int argc, const char** argv)
     }
 
     translate_sets(set_from, set_to, &set_from_length, &set_to_length);
-    
+
     while (TRUE) {
         if (fgets(line, LINE_LENGTH, stdin) == NULL) {
             clearerr(stdin);
