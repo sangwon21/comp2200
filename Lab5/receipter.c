@@ -5,6 +5,7 @@
 #include "receipter.h"
 #define MAX_ITEM_LENGTH (10)
 #define ONE_LINE_LENGTH (50)
+#define PRINT_LINE_LIMIT (75)
 
 typedef struct {
     const char* name;
@@ -84,7 +85,7 @@ int print_receipt(const char* filename, time_t timestamp)
     
     iter_ptr = g_message;
     if (iter_ptr != NULL) {
-        while (*iter_ptr != '\0') {
+        while (*iter_ptr != '\0' && iter_ptr - g_message != PRINT_LINE_LIMIT) {
             if (iter_ptr - g_message == ONE_LINE_LENGTH) {
                 fprintf(file, "%c", '\n');
             }
