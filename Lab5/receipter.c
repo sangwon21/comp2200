@@ -58,7 +58,7 @@ void add_message(const char* message)
         return;
     }
     strncpy(g_message, message, message_length);
-    g_message[message_length + 1] = NULL_CHAR;
+    g_message[message_length] = NULL_CHAR;
     g_message_length = message_length;
 }
 
