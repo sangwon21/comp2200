@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <time.h>
 #include <string.h>
@@ -5,27 +6,41 @@
 #define MAX_ITEM_LENGTH (10)
 #define ONE_LINE_LENGTH (50)
 #define PRINT_LINE_LIMIT (75)
+#define MAX_FOOD_NAME_LENGTH (25)
+#define NULL_CHAR ('\0')
 
 typedef struct {
-    const char* name;
+    char name[MAX_FOOD_NAME_LENGTH + 1];
     double price;
 } food_t;
 
 static int g_current_item_length = 0;
 static food_t g_item_lists[MAX_ITEM_LENGTH];
 static double g_tip = 0;
-static const char* g_message = NULL;
+static char g_message[PRINT_LINE_LIMIT + 1];
+static int g_message_length = 0;
 static int g_order_num = 0;
 
 int add_item(const char* name, double price)
 {
+    int name_length = 0;
     if (g_current_item_length >= MAX_ITEM_LENGTH) {
         return FALSE;
     }
+    name_length = strlen(name);
 
-    g_item_lists[g_current_item_length].name = name;
-    g_item_lists[g_current_item_length++].price = price;    
+    g_item_lists[g_current_item_length].price = price;    
     
+    if (name_length >= MAX_FOOD_NAME_LENGTH) {
+        strncpy(g_item_lists[g_current_item_length].name, name, MAX_FOOD_NAME_LENGTH);
+        g_item_lists[g_current_item_length++].name[MAX_FOOD_NAME_LENGTH] = NULL_CHAR;
+        
+        return TRUE;
+    }
+
+    strncpy(g_item_lists[g_current_item_length].name, name, name_length);
+    g_item_lists[g_current_item_length++].name[name_length] = NULL_CHAR;
+
     return TRUE;
 }
 
@@ -36,14 +51,24 @@ void add_tip(double tip)
 
 void add_message(const char* message)
 {
-    g_message = message;
+    int message_length = strlen(message);
+    if (message_length >= PRINT_LINE_LIMIT) {
+        strncpy(g_message, message, PRINT_LINE_LIMIT);
+        g_message[PRINT_LINE_LIMIT] = NULL_CHAR;
+        g_message_length = PRINT_LINE_LIMIT;
+        return;
+    }
+    strncpy(g_message, message, message_length);
+    g_message[message_length + 1] = NULL_CHAR;
+    g_message_length = message_length;
 }
 
 void initialize_data()
 {
     g_tip = 0;
-    g_message = NULL;
     g_current_item_length = 0;
+    g_message[g_current_item_length] = NULL_CHAR;
+    g_message_length = 0;
 }
 
 int print_receipt(const char* filename, time_t timestamp)
@@ -83,10 +108,10 @@ int print_receipt(const char* filename, time_t timestamp)
 
     
     iter_ptr = g_message;
-    if (iter_ptr != NULL) {
-        while (*iter_ptr != '\0' && iter_ptr - g_message != PRINT_LINE_LIMIT) {
+    if (g_message_length != 0) {
+        while (*iter_ptr != NULL_CHAR && iter_ptr - g_message != PRINT_LINE_LIMIT) {
             if (iter_ptr - g_message == ONE_LINE_LENGTH) {
-                fprintf(file, "%c", '\n');
+                fprintf(file, "%c", NULL_CHAR);
             }
             fprintf(file, "%c", *iter_ptr);
             iter_ptr++;

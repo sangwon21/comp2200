@@ -33,5 +33,9 @@ int main(void)
 
     assert(FALSE == print_receipt("receipt2.txt", time));
 
+    assert(TRUE == add_item("Seulgi", 23.12));
+    assert(TRUE == add_item("Irene", 17.12));
+
+    assert(TRUE == print_receipt("receipt3.txt", time));
 	return 0;
 }
