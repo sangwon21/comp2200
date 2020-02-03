@@ -110,7 +110,7 @@ int print_receipt(const char* filename, time_t timestamp)
     if (g_message_length != 0) {
         while (*iter_ptr != NULL_CHAR && iter_ptr - g_message != PRINT_LINE_LIMIT) {
             if (iter_ptr - g_message == ONE_LINE_LENGTH) {
-                fprintf(file, "%c", NULL_CHAR);
+                fprintf(file, "%c", '\n');
             }
             fprintf(file, "%c", *iter_ptr);
             iter_ptr++;
