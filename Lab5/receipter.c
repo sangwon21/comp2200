@@ -75,7 +75,7 @@ int print_receipt(const char* filename, time_t timestamp)
     FILE* file = NULL;
     struct tm* timeinfo = NULL;
     int index = 0;
-    double subTotal = 0.0;
+    double sub_total = 0.0;
     double tax = 0.0;
     const char* iter_ptr = NULL;
 
@@ -84,7 +84,7 @@ int print_receipt(const char* filename, time_t timestamp)
     }
 
     file = fopen(filename, "w");
-    timeinfo = gmtime( &timestamp );
+    timeinfo = gmtime(&timestamp);
     
     fprintf(file, "%s", "Charles' Seafood\n");
     fprintf(file, "%s", "--------------------------------------------------\n");
@@ -92,18 +92,19 @@ int print_receipt(const char* filename, time_t timestamp)
     fprintf(file, "                          %05d\n", s_order_num);
     fprintf(file, "%s", "--------------------------------------------------\n");
     for (; index < s_current_item_length; index++) {
-        subTotal += s_item_lists[index].price;
+        sub_total += s_item_lists[index].price;
         fprintf(file, "%33s%17.2f\n", s_item_lists[index].name, s_item_lists[index].price);
     }
-    tax = subTotal * 0.05;
+    tax = sub_total * 0.05;
 
-    fprintf(file, "\n%33s%17.2f\n", "Subtotal", subTotal);
+    fprintf(file, "\n%33s%17.2f\n", "Subtotal", sub_total);
+    
     if (s_tip != 0) {
         fprintf(file, "%33s%17.2f\n", "Tip", s_tip);
     }
 
     fprintf(file, "%33s%17.2f\n", "Tax", tax);
-    fprintf(file, "%33s%17.2f\n\n", "Total", subTotal + s_tip + tax);
+    fprintf(file, "%33s%17.2f\n\n", "Total", sub_total + s_tip + tax);
 
     
     iter_ptr = s_message;
