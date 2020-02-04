@@ -21,21 +21,8 @@ int main(void)
     assert(FALSE == add_item("This won't get added lol", 2.55));
 
     add_tip(20.55);
+    
+    assert(TRUE == print_receipt("receipt5.txt", time));
 
-    add_message("Thanks for dining with us!");
-
-    assert(TRUE == print_receipt("receipt0.txt", time));
-
-    assert(TRUE == add_item("Raw sea cucumber", 34.26));
-    assert(TRUE == add_item("Pan fried Mackerel", 16.58));
-    assert(TRUE == add_item("Pepsi", 5.99));
-    assert(TRUE == print_receipt("receipt1.txt", time));
-
-    assert(FALSE == print_receipt("receipt2.txt", time));
-
-    assert(TRUE == add_item("Seulgi", 23.12));
-    assert(TRUE == add_item("Irene", 17.12));
-
-    assert(TRUE == print_receipt("receipt3.txt", time));
 	return 0;
 }
