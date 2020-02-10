@@ -3,6 +3,7 @@
 #include <string.h>
 #include "character_deserializer.h"
 #define BUFFER_LENGTH 255
+#define NAME_LIMIT 50
 
 int my_atoi(const char* number)
 {
@@ -17,17 +18,16 @@ int my_atoi(const char* number)
     return result;
 }
 
-void version1_deserialize(character_v3_t* out_character)
+void version1_deserialize(character_v3_t* out_character, char* buffer)
 {
-    char buffer[BUFFER_LENGTH] = "player_";
-    char tmp[BUFFER_LENGTH];
-    const char* token;
+    char player_name[BUFFER_LENGTH] = "player_";
+    const char* token = strtok(buffer, ":");
 
     while (token) {
         if (strcmp("id", token) == 0) {
             token = strtok(NULL, ":,");
-            strcat(tmp, token);
-            strcpy(out_character->name, tmp);
+            strcat(player_name, token);
+            strcpy(out_character->name, player_name);
         } else if (strcmp("lvl", token) == 0) {
             token = strtok(NULL, ":,");
             out_character->level = my_atoi(token);
@@ -60,17 +60,62 @@ void version1_deserialize(character_v3_t* out_character)
     out_character->elemental_resistance.lightning = 1;
 }
 
+void version2_deserialize(character_v3_t* out_character, char* buffer)
+{
+    char player_name[NAME_LIMIT];
+    const char* token = strtok(buffer, ",");
+    int count = 0;
+    strncpy(player_name, token, NAME_LIMIT);
+    
+    while (token) {
+        if (count == 0) {
+            goto increase_token;
+        }
+        if (count == 1) {
+            out_character->level = my_atoi(token);
+        } else if (count == 2) {
+            out_character->strength = my_atoi(token);
+        } else if (count == 3) {
+            out_character->dexterity = my_atoi(token);
+        } else if (count == 4) {
+            out_character->intelligence = my_atoi(token);
+        } else if (count == 5) {
+            out_character->armour = my_atoi(token);
+        } else if (count == 6) {
+            out_character->evasion = my_atoi(token);
+        }  else if (count == 7) {
+            out_character-> elemental_resistance.cold = my_atoi(token) / 3;
+            out_character-> elemental_resistance.fire = my_atoi(token) / 3;
+            out_character-> elemental_resistance.lightning = my_atoi(token) / 3;
+        } else if (count == 8) {
+            out_character->health = my_atoi(token);
+        } else if (count == 9) {
+            out_character->mana = my_atoi(token);
+        }
+increase_token:
+        count++;
+        token = strtok(NULL, ",");
+    }
+}
+
 int get_character(const char* filename, character_v3_t* out_character)
 {
     char buffer[BUFFER_LENGTH];
-    char tmp[BUFFER_LENGTH] = "player_";
     char* token;
     FILE* file = fopen(filename, "r");
 
     fscanf(file, "%s", buffer);
     
-    token = strtok(buffer, ":,");
+    token = strstr(buffer, ":");
+    if (token != NULL) {
+        version1_deserialize(out_character, buffer);
+    }
 
+    token = strstr(buffer, ",");
+    if(token != NULL) {
+        fscanf(file, "%s", buffer);
+        version2_deserialize(out_character, buffer);
+    }
     
     
     fclose(file);
