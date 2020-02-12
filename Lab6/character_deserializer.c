@@ -131,14 +131,13 @@ void version3_deserialize(character_v3_t* out_character, FILE* file)
     char buffer[BUFFER_LENGTH];
     char line[BUFFER_LENGTH];
     char space;
-    int resistance;
 
     while (TRUE) {
         if (fgets(line, BUFFER_LENGTH, file) == NULL) {
             clearerr(file);
             break;
         }
-        
+
         if (sscanf(line, "%s %c %d %c %d %c %d %c %d %c %d %c %d %c %d %c %d %c %d %c %d %c %d %c %d %c %d27", buffer, &space, &out_character->level, &space, &out_character->health, &space, 
         &out_character->mana, &space, &out_character->strength, &space, &out_character->dexterity, &space, &out_character->intelligence, &space, &out_character->armour, 
         &space, &out_character->evasion, &space, &out_character->elemental_resistance.fire, &space, &out_character->elemental_resistance.cold,
