@@ -1,8 +1,9 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <string.h>
 #include "character_deserializer.h"
 #define BUFFER_LENGTH (512)
-#define NAME_LIMIT (50)
+#define NAME_LIMIT (51)
 #define TRUE (1)
 #define FALSE (0)
 
