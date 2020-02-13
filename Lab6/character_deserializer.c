@@ -67,6 +67,7 @@ void version2_deserialize(character_v3_t* out_character, char* buffer)
     const char* token = strtok(buffer, ",");
     int count = 0;
     strncpy(player_name, token, NAME_LIMIT);
+    player_name[NAME_LIMIT - 1] = '\0';
 
     while (token) {
         if (count == 0) {
@@ -117,9 +118,10 @@ void read_minions(character_v3_t* out_character, FILE* file)
         }
 
         if (sscanf(line, "%s %c %d %c %d %c %d", buffer, &space, &out_character->minions[count].health, &space, &out_character->minions[count].strength, &space, &out_character->minions[count].defence)) {
-                strncpy(player_name, buffer, NAME_LIMIT);
-                strncpy(out_character->minions[count].name, player_name, NAME_LIMIT);                            
-                count++;
+            strncpy(player_name, buffer, NAME_LIMIT);
+            player_name[NAME_LIMIT - 1] = '\0';
+            strncpy(out_character->minions[count].name, player_name, NAME_LIMIT);                            
+            count++;
         }
     } 
 }
@@ -137,17 +139,15 @@ void version3_deserialize(character_v3_t* out_character, FILE* file)
             break;
         }
 
-        if (sscanf(line, "%s %c %d %c %d %c %d %c %d %c %d %c %d %c %d %c %d %c %d %c %d %c %d %c %d %c %d27", buffer, &space, &out_character->level, &space, &out_character->health, &space, 
-        &out_character->mana, &space, &out_character->strength, &space, &out_character->dexterity, &space, &out_character->intelligence, &space, &out_character->armour, 
-        &space, &out_character->evasion, &space, &out_character->elemental_resistance.fire, &space, &out_character->elemental_resistance.cold,
-        &space, &out_character->elemental_resistance.lightning, &space, &out_character->leadership, &space, &out_character->minion_count)) {
-                strncpy(player_name, buffer, NAME_LIMIT);
-                strncpy(out_character->name, player_name, NAME_LIMIT);
-                
-                if (out_character->minion_count != 0) {
-                    fgets(buffer, BUFFER_LENGTH, file);
-                    read_minions(out_character, file);
-                }                            
+        if (sscanf(line, "%s %c %d %c %d %c %d %c %d %c %d %c %d %c %d %c %d %c %d %c %d %c %d %c %d %c %d", buffer, &space, &out_character->level, &space, &out_character->health, &space, &out_character->mana, &space, &out_character->strength, &space, &out_character->dexterity, &space, &out_character->intelligence, &space, &out_character->armour, &space, &out_character->evasion, &space, &out_character->elemental_resistance.fire, &space, &out_character->elemental_resistance.cold, &space, &out_character->elemental_resistance.lightning, &space, &out_character->leadership, &space, &out_character->minion_count)) {
+            strncpy(player_name, buffer, NAME_LIMIT);
+            player_name[NAME_LIMIT - 1] = '\0';
+            strncpy(out_character->name, player_name, NAME_LIMIT);
+
+            if (out_character->minion_count != 0) {
+                fgets(buffer, BUFFER_LENGTH, file);
+                read_minions(out_character, file);
+            }                            
         }
     }
 }
@@ -169,7 +169,7 @@ int get_character(const char* filename, character_v3_t* out_character)
     }
 
     token = strstr(buffer, ",");
-    if(token != NULL) {
+    if (token != NULL) {
         fgets(buffer, BUFFER_LENGTH, file);
         version2_deserialize(out_character, buffer);
         version = 2;
