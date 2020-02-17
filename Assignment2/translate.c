@@ -56,21 +56,6 @@ void translate_line(const char* char_from, const char* char_to, char* line, int 
     }
 }
 
-int is_valid_escape_letter(char letter) 
-{
-    char escape_letters[] = "\\abfnrtv'\"";
-    char* ptr_escape_letters = escape_letters;
-    
-    while (*ptr_escape_letters != '\0') {
-        if (*ptr_escape_letters == letter) {
-            return TRUE;
-        }
-        ptr_escape_letters++;
-    }
-
-    return FALSE;
-}
-
 int return_escape_letter(char letter) 
 {
     switch (letter) {
@@ -97,18 +82,6 @@ int return_escape_letter(char letter)
     default: 
         return -1;
     }
-}
-
-int try_put_escape_letter(char letter, char* dest, int* dest_length)
-{
-    int result = return_escape_letter(letter);
-    if (result == -1) {
-        return FALSE;
-    }
-    dest[*dest_length] = result;
-    (*dest_length)++;
-    
-    return TRUE;
 }
 
 int try_put_letters_in_scope(char minimum_scope_char, char maximum_scope_char, char* dest, int* dest_length, int* error_type)
@@ -224,16 +197,13 @@ int translate_escape_letter_and_scope(char* dest, char* src, int* src_length, in
     return NO_ERROR;
 }
 
-int find_in_used_letters(char* used_letters, int used_letters_length, char letter)
+int find_in_used_letters(int* used_letters, char letter)
 {
-    int index = 0;
-    for (; index < used_letters_length; index++) {
-        if (letter == used_letters[index]) {
-            return TRUE;
-        }
-    }
-
-    return FALSE;
+    if (used_letters[letter] == FALSE) {
+        used_letters[letter] = TRUE;
+        return FALSE;
+    } 
+    return TRUE;
 }
 
 void reverse_string(char* target_string, int target_string_length)
@@ -251,19 +221,27 @@ void reverse_string(char* target_string, int target_string_length)
     }
 }
 
+void initialize_used_letters(int* used_letters)
+{
+    int index = 0;
+    for (index = 0; index < ASCII_CODE_LENGTH; index++) {
+        used_letters[index] = FALSE;
+    }
+}
+
 void shrink_sets(char* set_from, char* set_to, int* set_from_length, int* set_to_length)
 {
-    char used_letters[ASCII_CODE_LENGTH];
+    int used_letters[ASCII_CODE_LENGTH];
     char shrinked_set_from[ARGUMENT_LENGTH];
     char shrinked_set_to[ARGUMENT_LENGTH];
-    int used_letters_length = 0;
     int shrinked_set_from_length = 0;
     int shrinked_set_to_length = 0;
     int index = *set_from_length - 1;
 
+    initialize_used_letters(used_letters);
+
     for (; index >= 0; index--) {
-        if (find_in_used_letters(used_letters, used_letters_length, set_from[index]) == FALSE) {
-            used_letters[used_letters_length++] = set_from[index];
+        if (find_in_used_letters(used_letters, set_from[index]) == FALSE) {
             shrinked_set_from[shrinked_set_from_length++] = set_from[index];
             shrinked_set_to[shrinked_set_to_length++] = set_to[index];
         }

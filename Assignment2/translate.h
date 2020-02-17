@@ -12,6 +12,12 @@ typedef enum error_code {
     ERROR_CODE_INVALID_RANGE
 } error_code_t;
 
+typedef enum letter_case {
+    LETTER_CASE_NOT_A_LETTER,
+    LETTER_CASE_LOWER_CASE,
+    LETTER_CASE_UPPER_CASE 
+} letter_cast_t;
+
 int translate(int argc, const char** argv);
 
 #endif /* TRANSLATE_H */
