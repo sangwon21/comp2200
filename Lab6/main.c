@@ -29,6 +29,7 @@ int main(void)
     assert(superman_v1.elemental_resistance.lightning == 1);
     
     version = get_character("Batman_v2.txt", &batman_v2);
+    printf("batman name is %s\n", batman_v2.name);
     assert(version == 2);
     assert(strcmp(batman_v2.name, "Batman_v2") == 0);
     assert(batman_v2.level == 25);
@@ -89,5 +90,5 @@ int main(void)
     assert(wonderwoman_v3.minions[1].strength == 20);
     assert(wonderwoman_v3.minions[1].defence == 4);
 
-	return 0;
+    return 0;
 }
