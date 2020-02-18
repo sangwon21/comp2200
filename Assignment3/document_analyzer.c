@@ -142,3 +142,8 @@ size_t get_total_sentence_count(void)
 {
     return s_total_sentence_count;
 }
+
+size_t get_total_paragraph_count(void)
+{
+    return s_document->paragraph_count;
+}
