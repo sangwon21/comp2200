@@ -174,3 +174,21 @@ size_t get_paragraph_word_count(const char*** paragraph)
 
     return 0;
 }   
+
+size_t get_paragraph_sentence_count(const char*** paragraph)
+{
+    int paragraph_index = 0;
+    int sentence_index = 0;
+    
+    if (s_document == NULL || paragraph == NULL) {
+        return 0;
+    }
+
+    for (paragraph_index = 0; paragraph_index < s_document->paragraph_count; paragraph_index++) {
+        if ((const char***)&s_document->paragraphs[paragraph_index].sentences->words == paragraph) {
+            return s_document->paragraphs[paragraph_index].sentence_count;
+        }
+    }
+
+    return 0;
+}
