@@ -32,6 +32,7 @@ void preprocess(FILE* file)
     char* word = NULL;
     char tmp_sentence[SENETENCE_LENGTH];
     char tmp_line[SENETENCE_LENGTH];
+    char* paragraph_ptr = NULL;
     char* word_malloc = NULL;
     size_t paragraph_count = s_document->paragraph_count;
     char** target_sentence = NULL;
@@ -45,6 +46,11 @@ void preprocess(FILE* file)
         }
 
         if (strcmp("\n", buffer) == 0) {
+            continue;
+        }
+
+        paragraph_ptr = strtok(buffer, "\n");
+        if (paragraph_ptr == NULL) {
             continue;
         }
 
@@ -147,3 +153,24 @@ const char*** get_paragraph(const size_t paragraph_index)
 
     return (const char***)&(s_document->paragraphs[paragraph_index].sentences->words);
 }
+
+size_t get_paragraph_word_count(const char*** paragraph)
+{
+    int paragraph_index = 0;
+    int sentence_index = 0;
+    size_t result = 0;
+    if (s_document == NULL || paragraph == NULL) {
+        return 0;
+    }
+
+    for (paragraph_index = 0; paragraph_index < s_document->paragraph_count; paragraph_index++) {
+        if ((const char***)&s_document->paragraphs[paragraph_index].sentences->words == paragraph) {
+            for (sentence_index = 0; sentence_index < s_document->paragraphs[paragraph_index].sentence_count; sentence_index++) {
+                result += s_document->paragraphs[paragraph_index].sentences[sentence_index].word_count;
+            }
+            return result;
+        }
+    }
+
+    return 0;
+}   
