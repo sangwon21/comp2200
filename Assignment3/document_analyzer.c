@@ -17,6 +17,7 @@
 char buffer[BUFFER_LENGTH];
 static document_t* s_document = NULL;
 static size_t s_total_word_count = 0;
+static size_t s_total_sentence_count = 0;
 
 char* make_word_malloc(char* word)
 {
@@ -65,7 +66,7 @@ void preprocess(FILE* file)
             }
             s_document->paragraphs[s_document->paragraph_count].sentences[s_document->paragraphs[s_document->paragraph_count].sentence_count].word_count = target_sentence_index ;
             (s_document->paragraphs[s_document->paragraph_count].sentence_count)++;
-            
+            s_total_sentence_count++;
             strcpy(tmp_line, buffer);
             sentence = strtok(tmp_line, ".!?");
             for (strtok_count = 0; strtok_count < s_document->paragraphs[s_document->paragraph_count].sentence_count && sentence != NULL; strtok_count++) {
@@ -135,4 +136,9 @@ const char*** get_paragraph(const size_t paragraph_index)
 size_t get_total_word_count(void)
 {
     return s_total_word_count;
+}
+
+size_t get_total_sentence_count(void)
+{
+    return s_total_sentence_count;
 }
