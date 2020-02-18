@@ -26,4 +26,19 @@ size_t get_sentence_word_count(const char** sentence);
 
 int print_as_tree(const char* filename);
 
+typedef struct {
+    int word_count;
+    char** words;
+} sentence_t;
+
+typedef struct {
+    int sentence_count;
+    sentence_t* sentences;
+} paragraph_t;
+
+typedef struct {
+    int paragraph_count;
+    paragraph_t* paragraphs;
+} document_t;
+
 #endif /* DOCUMENT_ANALYZER_H */
