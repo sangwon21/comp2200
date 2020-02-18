@@ -33,7 +33,7 @@ void preprocess(FILE* file)
     char tmp_sentence[SENETENCE_LENGTH];
     char tmp_line[SENETENCE_LENGTH];
     char* word_malloc = NULL;
-    int paragraph_count = s_document->paragraphs;
+    size_t paragraph_count = s_document->paragraph_count;
     char** target_sentence = NULL;
     int target_sentence_index = 0;
     int strtok_count = 0;
@@ -124,15 +124,6 @@ int load_document(const char* document)
     return TRUE;
 }
 
-const char*** get_paragraph(const size_t paragraph_index)
-{
-    if (s_document == NULL || paragraph_index >= s_document->paragraph_count) {
-        return NULL;
-    }
-
-    return (const char***)(s_document->paragraphs + paragraph_index);
-}
-
 size_t get_total_word_count(void)
 {
     return s_total_word_count;
@@ -146,4 +137,13 @@ size_t get_total_sentence_count(void)
 size_t get_total_paragraph_count(void)
 {
     return s_document->paragraph_count;
+}
+
+const char*** get_paragraph(const size_t paragraph_index)
+{
+    if (s_document == NULL || paragraph_index >= s_document->paragraph_count) {
+        return NULL;
+    }
+
+    return (const char***)&(s_document->paragraphs[paragraph_index].sentences->words);
 }
