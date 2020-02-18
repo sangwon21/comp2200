@@ -179,7 +179,7 @@ size_t get_paragraph_sentence_count(const char*** paragraph)
 {
     int paragraph_index = 0;
     int sentence_index = 0;
-    
+
     if (s_document == NULL || paragraph == NULL) {
         return 0;
     }
@@ -191,4 +191,9 @@ size_t get_paragraph_sentence_count(const char*** paragraph)
     }
 
     return 0;
+}
+
+const char** get_sentence(const size_t paragraph_index, const size_t sentence_index)
+{
+    return s_document->paragraphs[paragraph_index].sentences[sentence_index].words;
 }
