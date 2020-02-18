@@ -195,5 +195,25 @@ size_t get_paragraph_sentence_count(const char*** paragraph)
 
 const char** get_sentence(const size_t paragraph_index, const size_t sentence_index)
 {
-    return s_document->paragraphs[paragraph_index].sentences[sentence_index].words;
+    return (const char**)s_document->paragraphs[paragraph_index].sentences[sentence_index].words;
+}
+
+size_t get_sentence_word_count(const char** sentence)
+{
+    size_t paragraph_index = 0;
+    size_t sentence_index = 0;
+
+    if (s_document == NULL || sentence == NULL) {
+        return 0;
+    }
+
+    for (paragraph_index = 0; paragraph_index < s_document->paragraph_count; paragraph_index++) {
+        for (sentence_index = 0; sentence_index < s_document->paragraphs[paragraph_index].sentence_count; sentence_index++) {
+            if ((const char**)s_document->paragraphs[paragraph_index].sentences[sentence_index].words == sentence) {
+                return s_document->paragraphs[paragraph_index].sentences[sentence_index].word_count;
+            }
+        }
+    }
+
+    return 0;
 }
