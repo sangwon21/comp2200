@@ -136,6 +136,7 @@ int load_document(const char* document)
     preprocess(file);
 
     s_document_loaded = TRUE;
+    fclose(file);
     return TRUE;
 }
 
