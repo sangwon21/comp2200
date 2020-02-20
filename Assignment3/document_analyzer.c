@@ -121,6 +121,15 @@ int load_document(const char* document)
         return FALSE;
     }
 
+    if (s_paragraphs != NULL) {
+        dispose();
+    }
+
+    s_document_loaded = FALSE;
+    s_total_paragraph_count = 0;
+    s_total_sentence_count = 0;
+    s_total_word_count = 0;
+
     allocate_memory();
     preprocess(file);
     s_document_loaded = TRUE;
