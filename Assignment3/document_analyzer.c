@@ -118,20 +118,20 @@ int load_document(const char* document)
 {
     FILE* file = fopen(document, "r");
 
-    if (file == NULL) {
-        s_document_loaded = FALSE;
-        return FALSE;
-    }
+    s_total_paragraph_count = 0;
+    s_total_sentence_count = 0;
+    s_total_word_count = 0;
 
     if (s_paragraphs != NULL) {
         dispose();
         s_paragraphs = NULL;
     }
 
-    s_total_paragraph_count = 0;
-    s_total_sentence_count = 0;
-    s_total_word_count = 0;
-
+    if (file == NULL) {
+        s_document_loaded = FALSE;
+        return FALSE;
+    }
+    
     allocate_memory();
     preprocess(file);
 
