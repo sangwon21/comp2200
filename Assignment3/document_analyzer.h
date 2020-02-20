@@ -4,7 +4,7 @@
 #define TRUE (1)
 #define FALSE (0)
 
-int load_document(const char *document);
+int load_document(const char* document);
 
 void dispose(void);
 
