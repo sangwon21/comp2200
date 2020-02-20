@@ -118,6 +118,7 @@ int load_document(const char* document)
 {
     FILE* file = fopen(document, "r");
     if (file == NULL) {
+        s_document_loaded = FALSE;
         return FALSE;
     }
 
@@ -125,14 +126,14 @@ int load_document(const char* document)
         dispose();
     }
 
-    s_document_loaded = FALSE;
+    s_document_loaded = TRUE;
     s_total_paragraph_count = 0;
     s_total_sentence_count = 0;
     s_total_word_count = 0;
 
     allocate_memory();
     preprocess(file);
-    s_document_loaded = TRUE;
+    
     return TRUE;
 }
 
