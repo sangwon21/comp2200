@@ -13,9 +13,10 @@
 #define BUFFER_LENGTH (512)
 #define SENETENCE_LENGTH (512)
 
-static document_t* s_document = NULL;
+static int s_document_loaded = FALSE;
 static size_t s_total_word_count = 0;
 static size_t s_total_sentence_count = 0;
+static size_t s_total_paragraph_count = 0;
 static char**** s_paragraphs;
 
 char* make_word_malloc(char* word)
@@ -25,6 +26,12 @@ char* make_word_malloc(char* word)
     return word_malloc;
 }
 
+char** make_sentence_malloc()
+{
+    char** sentence_malloc = calloc(DEFAULT_SENTENCE_COUNT, sizeof(char*));
+    return sentence_malloc;
+}
+
 void preprocess(FILE* file)
 {
     char* sentence = NULL;
@@ -32,11 +39,11 @@ void preprocess(FILE* file)
     char buffer[BUFFER_LENGTH];
     char tmp_sentence[SENETENCE_LENGTH];
     char tmp_line[SENETENCE_LENGTH];
-    char* paragraph_ptr = NULL;
     char* word_malloc = NULL;
-    char** target_sentence = NULL;
+    char** sentence_malloc = NULL;
     size_t sentence_index = 0;
-    int target_sentence_index = 0;
+    size_t paragraph_index = 0;
+    size_t word_index = 0;
     size_t strtok_count = 0;
 
     while (TRUE) {
@@ -45,61 +52,45 @@ void preprocess(FILE* file)
             break;
         }
 
-        if (strcmp("\n", buffer) == 0) {
-            continue;
-        }
-
-        paragraph_ptr = strtok(buffer, "\n");
-        if (paragraph_ptr == NULL) {
+        if (strtok(buffer, "\n") == NULL) {
             continue;
         }
 
         strcpy(tmp_line, buffer);
         sentence = strtok(tmp_line, ".!?");
-
         sentence_index = 0;
+
         while (sentence != NULL) {
-            target_sentence = s_document->paragraphs[s_document->paragraph_count].sentences[s_document->paragraphs[s_document->paragraph_count].sentence_count].words;
-            target_sentence_index = 0;
             strcpy(tmp_sentence, sentence);
+            sentence_malloc = make_sentence_malloc();
+            
             word = strtok(tmp_sentence, ", ");
+            word_index = 0;
             while (word != NULL) {
                 word_malloc = make_word_malloc(word);
-                target_sentence[target_sentence_index] = word_malloc;
-                target_sentence_index++;
+                sentence_malloc[word_index] = word_malloc;
                 s_total_word_count++;
+                word_index++;
                 word = strtok(NULL, ", ");
             }
-            s_document->paragraphs[s_document->paragraph_count].sentences[s_document->paragraphs[s_document->paragraph_count].sentence_count].word_count = target_sentence_index;
-            (s_document->paragraphs[s_document->paragraph_count].sentence_count)++;
-            s_total_sentence_count++;
+
             strcpy(tmp_line, buffer);
+            s_paragraphs[paragraph_index][sentence_index] = sentence_malloc;
+            s_total_sentence_count++;
+            sentence_index++;
             sentence = strtok(tmp_line, ".!?");
-            for (strtok_count = 0; strtok_count < s_document->paragraphs[s_document->paragraph_count].sentence_count && sentence != NULL; strtok_count++) {
+            for (strtok_count = 0; strtok_count < sentence_index; strtok_count++) {
                 sentence = strtok(NULL, ".!?");
             }
-            s_paragraphs[s_document->paragraph_count][sentence_index] = target_sentence;
-            sentence_index++;
         }
-        (s_document->paragraph_count)++;
+        s_total_paragraph_count++;
+        paragraph_index++;
     }
 }
 
 void allocate_memory()
 {
     int paragraph_index = 0;
-    int sentence_index = 0;
-    s_document = malloc(sizeof(document_t));
-    s_document->paragraph_count = 0;
-    s_document->paragraphs = malloc(sizeof(paragraph_t) * DEFAULT_PARAGRAPH_COUNT);
-    for (paragraph_index = 0; paragraph_index < DEFAULT_PARAGRAPH_COUNT; paragraph_index++) {
-        s_document->paragraphs[paragraph_index].sentences = malloc(sizeof(sentence_t) * DEFAULT_SENTENCE_COUNT);
-        s_document->paragraphs[paragraph_index].sentence_count = 0;
-        for (sentence_index = 0; sentence_index < DEFAULT_SENTENCE_COUNT; sentence_index++) {
-            s_document->paragraphs[paragraph_index].sentences[sentence_index].words = malloc(sizeof(char*) * DEFAULT_WORD_COUNT);
-            s_document->paragraphs[paragraph_index].sentences[sentence_index].word_count = 0;
-        }
-    }
     s_paragraphs = calloc(DEFAULT_PARAGRAPH_COUNT, sizeof(char***));
     for (paragraph_index = 0; paragraph_index < DEFAULT_PARAGRAPH_COUNT; paragraph_index++) {
         s_paragraphs[paragraph_index] = calloc(DEFAULT_SENTENCE_COUNT, sizeof(char**));
@@ -110,19 +101,17 @@ void dispose(void)
 {
     int paragraph_index = 0;
     int sentence_index = 0;
-    size_t word_index = 0;
-    for (paragraph_index = 0; paragraph_index < DEFAULT_PARAGRAPH_COUNT; paragraph_index++) {
-        for (sentence_index = 0; sentence_index < DEFAULT_SENTENCE_COUNT; sentence_index++) {
-            for (word_index = 0; word_index < s_document->paragraphs[paragraph_index].sentences[sentence_index].word_count; word_index++) {
-                free(s_document->paragraphs[paragraph_index].sentences[sentence_index].words[word_index]);
+    int word_index = 0;
+    for (paragraph_index = 0; paragraph_index < DEFAULT_PARAGRAPH_COUNT && s_paragraphs[paragraph_index] != NULL; paragraph_index++) {
+        for (sentence_index = 0; sentence_index < DEFAULT_SENTENCE_COUNT && s_paragraphs[paragraph_index][sentence_index] != NULL; sentence_index++) {
+            for (word_index = 0; word_index < DEFAULT_WORD_COUNT && s_paragraphs[paragraph_index][sentence_index][word_index] != NULL; word_index++) {
+                free(s_paragraphs[paragraph_index][sentence_index][word_index]);
             }
-            free(s_document->paragraphs[paragraph_index].sentences[sentence_index].words);
+            free(s_paragraphs[paragraph_index][sentence_index]);
         }
-        free(s_document->paragraphs[paragraph_index].sentences);
+        free(s_paragraphs[paragraph_index]);
     }
-    free(s_document->paragraphs);
-    free(s_document);
-
+    free(s_paragraphs);
 }
 
 int load_document(const char* document)
@@ -134,6 +123,7 @@ int load_document(const char* document)
 
     allocate_memory();
     preprocess(file);
+    s_document_loaded = TRUE;
     return TRUE;
 }
 
@@ -149,53 +139,61 @@ size_t get_total_sentence_count(void)
 
 size_t get_total_paragraph_count(void)
 {
-    return s_document->paragraph_count;
+    return s_total_paragraph_count;
 }
 
 const char*** get_paragraph(const size_t paragraph_index)
 {
-    if (s_document == NULL || paragraph_index >= s_document->paragraph_count) {
+    if (s_document_loaded == FALSE || paragraph_index >= s_total_paragraph_count) {
         return NULL;
     }
-     return (const char***)s_paragraphs[paragraph_index];
+    return (const char***)s_paragraphs[paragraph_index];
 }
 
 size_t get_paragraph_word_count(const char*** paragraph)
 {
     size_t paragraph_index = 0;
     size_t sentence_index = 0;
+    size_t word_index = 0;
     size_t result = 0;
-    if (s_document == NULL || paragraph == NULL) {
+    if (s_document_loaded == FALSE || paragraph == NULL) {
         return 0;
     }
 
-    for (paragraph_index = 0; paragraph_index < s_document->paragraph_count; paragraph_index++) {
-        if ((const char**)s_document->paragraphs[paragraph_index].sentences->words == *paragraph) {
-            for (sentence_index = 0; sentence_index < s_document->paragraphs[paragraph_index].sentence_count; sentence_index++) {
-                result += s_document->paragraphs[paragraph_index].sentences[sentence_index].word_count;
+    for (paragraph_index = 0; paragraph_index < DEFAULT_PARAGRAPH_COUNT; paragraph_index++) {
+        if ((const char***)s_paragraphs[paragraph_index] == paragraph) {
+            for (sentence_index = 0; sentence_index < DEFAULT_SENTENCE_COUNT && s_paragraphs[paragraph_index][sentence_index] != NULL; sentence_index++) {
+                for (word_index = 0; word_index < DEFAULT_WORD_COUNT && s_paragraphs[paragraph_index][sentence_index][word_index] != NULL; word_index++) {
+                    result++;
+                }
             }
             return result;
         }
     }
 
-    return 0;
+    return result;
 }
 
 size_t get_paragraph_sentence_count(const char*** paragraph)
 {
     size_t paragraph_index = 0;
+    size_t sentence_index = 0;
+    size_t result = 0;
 
-    if (s_document == NULL || paragraph == NULL) {
+    if (s_document_loaded == FALSE || paragraph == NULL) {
         return 0;
     }
 
-    for (paragraph_index = 0; paragraph_index < s_document->paragraph_count; paragraph_index++) {
-        if ((const char**)s_document->paragraphs[paragraph_index].sentences->words == *paragraph) {
-            return s_document->paragraphs[paragraph_index].sentence_count;
+    for (paragraph_index = 0; paragraph_index < DEFAULT_PARAGRAPH_COUNT; paragraph_index++) {
+        if ((const char***)s_paragraphs[paragraph_index] == paragraph) {
+            for (sentence_index = 0; sentence_index < DEFAULT_SENTENCE_COUNT && s_paragraphs[paragraph_index][sentence_index] != NULL; sentence_index++) {
+                result++;
+            }
+            return result;
         }
     }
 
-    return 0;
+    return result;
 }
 
 const char** get_sentence(const size_t paragraph_index, const size_t sentence_index)
@@ -207,20 +205,26 @@ size_t get_sentence_word_count(const char** sentence)
 {
     size_t paragraph_index = 0;
     size_t sentence_index = 0;
+    size_t word_index = 0;
+    size_t result = 0;
 
-    if (s_document == NULL || sentence == NULL) {
+    if (s_document_loaded == FALSE || sentence == NULL) {
         return 0;
     }
 
-    for (paragraph_index = 0; paragraph_index < s_document->paragraph_count; paragraph_index++) {
-        for (sentence_index = 0; sentence_index < s_document->paragraphs[paragraph_index].sentence_count; sentence_index++) {
-            if ((const char**)s_document->paragraphs[paragraph_index].sentences[sentence_index].words == sentence) {
-                return s_document->paragraphs[paragraph_index].sentences[sentence_index].word_count;
+    for (paragraph_index = 0; paragraph_index < DEFAULT_PARAGRAPH_COUNT; paragraph_index++) {
+        for (sentence_index = 0; sentence_index < DEFAULT_SENTENCE_COUNT && s_paragraphs[paragraph_index][sentence_index] != NULL; sentence_index++) {
+            if ((const char**)s_paragraphs[paragraph_index][sentence_index] == sentence) {
+                for (word_index = 0; word_index < DEFAULT_WORD_COUNT && s_paragraphs[paragraph_index][sentence_index][word_index] != NULL; word_index++) {
+                    result++;
+                }
+                return result;
             }
         }
+
     }
 
-    return 0;
+    return result;
 }
 
 int print_as_tree(const char* filename)
@@ -233,17 +237,17 @@ int print_as_tree(const char* filename)
         return FALSE;
     }
 
-    for (paragraph_index = 0; paragraph_index < s_document->paragraph_count; paragraph_index++) {
+    for (paragraph_index = 0; paragraph_index < s_total_paragraph_count; paragraph_index++) {
         if (paragraph_index != 0) {
             fprintf(file, "\n\n");
         }
         fprintf(file, "Paragraph %d:", paragraph_index);
-        for (sentence_index = 0; sentence_index < s_document->paragraphs[paragraph_index].sentence_count; sentence_index++) {
+        for (sentence_index = 0; sentence_index < DEFAULT_SENTENCE_COUNT && s_paragraphs[paragraph_index][sentence_index] != NULL; sentence_index++) {
             fprintf(file, "\n");
             fprintf(file, "    Sentence %d:", sentence_index);
-            for (word_index = 0; word_index < s_document->paragraphs[paragraph_index].sentences[sentence_index].word_count; word_index++) {
+            for (word_index = 0; word_index < DEFAULT_WORD_COUNT && s_paragraphs[paragraph_index][sentence_index][word_index] != NULL; word_index++) {
                 fprintf(file, "\n");
-                fprintf(file, "        %s", s_document->paragraphs[paragraph_index].sentences[sentence_index].words[word_index]);
+                fprintf(file, "        %s", s_paragraphs[paragraph_index][sentence_index][word_index]);
             }
         }
     }

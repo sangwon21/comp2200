@@ -11,6 +11,7 @@ int main(void)
     size_t j = 0U;
 
     assert(load_document("doesntexist.txt") == FALSE);
+    assert(load_document("salkdfja") == FALSE);
     assert(load_document("input.txt") == TRUE);
 
     assert(get_total_word_count() == 58U);
@@ -22,6 +23,7 @@ int main(void)
     paragraph = get_paragraph(1);
     assert(paragraph != NULL);
     assert(get_paragraph_word_count(paragraph) == 14);
+    printf("%d\n",get_paragraph_sentence_count(paragraph));
     assert(get_paragraph_sentence_count(paragraph) == 2);
 
     assert(strcmp(paragraph[i][j++], "This") == 0);
