@@ -239,15 +239,16 @@ size_t get_sentence_word_count(const char** sentence)
 
 int print_as_tree(const char* filename)
 {
-    FILE* file = fopen(filename, "w");
+    FILE* file = NULL;
     size_t paragraph_index = 0;
     size_t sentence_index = 0;
     size_t word_index = 0;
  
-    if (file == NULL || s_paragraphs == NULL || s_total_word_count == 0) {
-        fclose(file);
+    if (s_paragraphs == NULL || s_total_word_count == 0) {
         return FALSE;
     }
+
+    file = fopen(filename, "r");
 
     for (paragraph_index = 0; paragraph_index < s_total_paragraph_count && s_paragraphs[paragraph_index] != NULL; paragraph_index++) {
         if (paragraph_index != 0) {
