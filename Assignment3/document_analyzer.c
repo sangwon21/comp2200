@@ -57,14 +57,12 @@ void preprocess(FILE* file)
     size_t word_index = 0;
     size_t strtok_count = 0;
 
+    make_paragraphs_malloc();
+
     while (TRUE) {
         if (fgets(buffer, BUFFER_LENGTH, file) == NULL) {
             clearerr(file);
             break;
-        }
-
-        if (s_paragraphs == NULL) {
-            make_paragraphs_malloc();
         }
 
         if (strtok(buffer, "\n") == NULL) {
@@ -183,7 +181,7 @@ size_t get_paragraph_word_count(const char*** paragraph)
         return 0;
     }
 
-    for (paragraph_index = 0; paragraph_index < DEFAULT_PARAGRAPH_COUNT; paragraph_index++) {
+    for (paragraph_index = 0; paragraph_index < s_total_paragraph_count; paragraph_index++) {
         if ((const char***)s_paragraphs[paragraph_index] == paragraph) {
             for (sentence_index = 0; sentence_index < DEFAULT_SENTENCE_COUNT && s_paragraphs[paragraph_index][sentence_index] != NULL; sentence_index++) {
                 for (word_index = 0; word_index < DEFAULT_WORD_COUNT && s_paragraphs[paragraph_index][sentence_index][word_index] != NULL; word_index++) {
@@ -207,7 +205,7 @@ size_t get_paragraph_sentence_count(const char*** paragraph)
         return 0;
     }
 
-    for (paragraph_index = 0; paragraph_index < DEFAULT_PARAGRAPH_COUNT; paragraph_index++) {
+    for (paragraph_index = 0; paragraph_index < s_total_paragraph_count; paragraph_index++) {
         if ((const char***)s_paragraphs[paragraph_index] == paragraph) {
             for (sentence_index = 0; sentence_index < DEFAULT_SENTENCE_COUNT && s_paragraphs[paragraph_index][sentence_index] != NULL; sentence_index++) {
                 result++;
@@ -248,7 +246,7 @@ size_t get_sentence_word_count(const char** sentence)
         return 0;
     }
 
-    for (paragraph_index = 0; paragraph_index < DEFAULT_PARAGRAPH_COUNT; paragraph_index++) {
+    for (paragraph_index = 0; paragraph_index < s_total_paragraph_count; paragraph_index++) {
         for (sentence_index = 0; sentence_index < DEFAULT_SENTENCE_COUNT && s_paragraphs[paragraph_index][sentence_index] != NULL; sentence_index++) {
             if ((const char**)s_paragraphs[paragraph_index][sentence_index] == sentence) {
                 for (word_index = 0; word_index < DEFAULT_WORD_COUNT && s_paragraphs[paragraph_index][sentence_index][word_index] != NULL; word_index++) {
