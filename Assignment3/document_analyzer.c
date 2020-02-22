@@ -105,14 +105,14 @@ void preprocess(FILE* file)
 
 void dispose(void)
 {
-
+    int paragraph_index = 0;
+    int sentence_index = 0;
+    int word_index = 0;
+ 
     if (s_paragraphs == NULL) {
         return;
     }
 
-    int paragraph_index = 0;
-    int sentence_index = 0;
-    int word_index = 0;
     for (paragraph_index = 0; paragraph_index < DEFAULT_PARAGRAPH_COUNT && s_paragraphs[paragraph_index] != NULL; paragraph_index++) {
         for (sentence_index = 0; sentence_index < DEFAULT_SENTENCE_COUNT && s_paragraphs[paragraph_index][sentence_index] != NULL; sentence_index++) {
             for (word_index = 0; word_index < DEFAULT_WORD_COUNT && s_paragraphs[paragraph_index][sentence_index][word_index] != NULL; word_index++) {
