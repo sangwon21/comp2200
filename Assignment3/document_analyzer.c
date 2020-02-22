@@ -5,13 +5,13 @@
 
 #define TRUE (1)
 #define FALSE (0)
-#define DEFAULT_PARAGRAPH_COUNT (256)
-#define DEFAULT_SENTENCE_COUNT (256)
-#define DEFAULT_WORD_COUNT (256)
-#define DEFAULT_WORD_LENGTH (256)
+#define DEFAULT_PARAGRAPH_COUNT (1024)
+#define DEFAULT_SENTENCE_COUNT (1024)
+#define DEFAULT_WORD_COUNT (1024)
+#define DEFAULT_WORD_LENGTH (1024)
 
-#define BUFFER_LENGTH (512)
-#define SENETENCE_LENGTH (512)
+#define BUFFER_LENGTH (1024)
+#define SENETENCE_LENGTH (1024)
 
 static size_t s_total_word_count = 0;
 static size_t s_total_sentence_count = 0;
@@ -118,20 +118,24 @@ void dispose(void)
         free(s_paragraphs[paragraph_index]);
     }
     free(s_paragraphs);
+    s_paragraphs = NULL;
 }
 
-int load_document(const char* document)
-{
-    FILE* file = fopen(document, "r");
-
+void initialize_status() {
     s_total_paragraph_count = 0;
     s_total_sentence_count = 0;
     s_total_word_count = 0;
 
     if (s_paragraphs != NULL) {
         dispose();
-        s_paragraphs = NULL;
     }
+}
+
+int load_document(const char* document)
+{
+    FILE* file = fopen(document, "r");
+
+    initialize_status();
 
     if (file == NULL) {
         return FALSE;
@@ -140,11 +144,6 @@ int load_document(const char* document)
     preprocess(file);
 
     fclose(file);
-
-    if (s_total_word_count == 0) {
-        dispose();
-        return FALSE;    
-    }
 
     return TRUE;
 }
@@ -220,6 +219,19 @@ size_t get_paragraph_sentence_count(const char*** paragraph)
 
 const char** get_sentence(const size_t paragraph_index, const size_t sentence_index)
 {
+    char*** paragraph = NULL;
+    size_t sentence_count = 0;
+
+    if (s_paragraphs == NULL || paragraph_index >= s_total_paragraph_count) {
+        return NULL;
+    }
+    paragraph = get_paragraph(paragraph_index);
+    sentence_count = get_paragraph_sentence_count(paragraph);
+    
+    if (sentence_count <= sentence_index) {
+        return NULL;
+    }
+
     return (const char**)s_paragraphs[paragraph_index][sentence_index];
 }
 
