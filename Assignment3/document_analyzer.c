@@ -244,7 +244,7 @@ int print_as_tree(const char* filename)
     size_t sentence_index = 0;
     size_t word_index = 0;
  
-    if (file == NULL || s_paragraphs == NULL) {
+    if (file == NULL || s_paragraphs == NULL || s_total_word_count == 0) {
         fclose(file);
         return FALSE;
     }
