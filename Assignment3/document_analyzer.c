@@ -37,7 +37,7 @@ char*** make_paragraph_malloc()
     return paragraph_malloc;
 }
 
-char**** make_paragraphs_malloc()
+void make_paragraphs_malloc()
 {
     s_paragraphs = calloc(DEFAULT_PARAGRAPH_COUNT, sizeof(char***));
 }
@@ -140,6 +140,12 @@ int load_document(const char* document)
     preprocess(file);
 
     fclose(file);
+
+    if (s_total_word_count == 0) {
+        dispose();
+        return FALSE;    
+    }
+
     return TRUE;
 }
 
