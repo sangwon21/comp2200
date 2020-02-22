@@ -10,8 +10,21 @@ int main(void)
     size_t i = 0U;
     size_t j = 0U;
 
+    
+
     assert(load_document("doesntexist.txt") == FALSE);
+    
     assert(load_document("salkdfja") == FALSE);
+    printf("%d\n", get_total_word_count());
+    assert(load_document("document.txt") == TRUE);
+    printf("%d\n",get_total_word_count());
+    assert(load_document("salkdfja") == FALSE);
+    assert(load_document("a.txt") == TRUE);
+    assert(get_total_word_count() == 0);
+    assert(get_total_paragraph_count() == 0);
+    assert(get_total_sentence_count() == 0);
+    assert(print_as_tree("a_output.txt") == TRUE);
+    assert(get_total_word_count() == 0);
     assert(load_document("input.txt") == TRUE);
 
     assert(get_total_word_count() == 58U);
@@ -59,9 +72,11 @@ int main(void)
 
     assert(print_as_tree("output.txt") == TRUE);
 
-    dispose();
+    assert(load_document("hello.txt") == FALSE);
+    assert(get_total_paragraph_count() == 0);
+    assert(get_total_paragraph_count() == 0);
 
-    return 0;
+    dispose();
 
     return 0;
 }
