@@ -105,6 +105,11 @@ void preprocess(FILE* file)
 
 void dispose(void)
 {
+
+    if (s_paragraphs == NULL) {
+        return;
+    }
+
     int paragraph_index = 0;
     int sentence_index = 0;
     int word_index = 0;
@@ -127,9 +132,9 @@ void initialize_status()
     s_total_sentence_count = 0;
     s_total_word_count = 0;
 
-    if (s_paragraphs != NULL) {
-        dispose();
-    }
+ 
+    dispose();
+    
 }
 
 int load_document(const char* document)
