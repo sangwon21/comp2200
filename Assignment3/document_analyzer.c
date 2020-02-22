@@ -248,7 +248,7 @@ int print_as_tree(const char* filename)
         return FALSE;
     }
 
-    file = fopen(filename, "r");
+    file = fopen(filename, "w");
 
     for (paragraph_index = 0; paragraph_index < s_total_paragraph_count && s_paragraphs[paragraph_index] != NULL; paragraph_index++) {
         if (paragraph_index != 0) {
