@@ -245,10 +245,11 @@ int print_as_tree(const char* filename)
     size_t word_index = 0;
  
     if (file == NULL || s_paragraphs == NULL) {
+        fclose(file);
         return FALSE;
     }
 
-    for (paragraph_index = 0; paragraph_index < DEFAULT_PARAGRAPH_COUNT && s_paragraphs[paragraph_index] != NULL; paragraph_index++) {
+    for (paragraph_index = 0; paragraph_index < s_total_paragraph_count && s_paragraphs[paragraph_index] != NULL; paragraph_index++) {
         if (paragraph_index != 0) {
             fprintf(file, "\n\n");
         }
@@ -265,5 +266,6 @@ int print_as_tree(const char* filename)
         }
     }
 
+    fclose(file);
     return TRUE;
 }
