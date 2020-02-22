@@ -57,12 +57,14 @@ void preprocess(FILE* file)
     size_t word_index = 0;
     size_t strtok_count = 0;
 
-    make_paragraphs_malloc();
-
     while (TRUE) {
         if (fgets(buffer, BUFFER_LENGTH, file) == NULL) {
             clearerr(file);
             break;
+        }
+
+        if (s_paragraphs == NULL) {
+            make_paragraphs_malloc();
         }
 
         if (strtok(buffer, "\n") == NULL) {
