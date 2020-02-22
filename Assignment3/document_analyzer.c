@@ -109,6 +109,10 @@ void dispose(void)
     int sentence_index = 0;
     int word_index = 0;
  
+    s_total_paragraph_count = 0;
+    s_total_sentence_count = 0;
+    s_total_word_count = 0;
+
     if (s_paragraphs == NULL) {
         return;
     }
@@ -126,22 +130,11 @@ void dispose(void)
     s_paragraphs = NULL;
 }
 
-void initialize_status()
-{
-    s_total_paragraph_count = 0;
-    s_total_sentence_count = 0;
-    s_total_word_count = 0;
-
- 
-    dispose();
-    
-}
-
 int load_document(const char* document)
 {
     FILE* file = fopen(document, "r");
 
-    initialize_status();
+    dispose();
 
     if (file == NULL) {
         return FALSE;
