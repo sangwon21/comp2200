@@ -121,7 +121,8 @@ void dispose(void)
     s_paragraphs = NULL;
 }
 
-void initialize_status() {
+void initialize_status()
+{
     s_total_paragraph_count = 0;
     s_total_sentence_count = 0;
     s_total_word_count = 0;
