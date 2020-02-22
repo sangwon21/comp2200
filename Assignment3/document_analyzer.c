@@ -225,8 +225,8 @@ const char** get_sentence(const size_t paragraph_index, const size_t sentence_in
     if (s_paragraphs == NULL || paragraph_index >= s_total_paragraph_count) {
         return NULL;
     }
-    paragraph = get_paragraph(paragraph_index);
-    sentence_count = get_paragraph_sentence_count(paragraph);
+    paragraph = (char***)get_paragraph(paragraph_index);
+    sentence_count = get_paragraph_sentence_count((const char***)paragraph);
     
     if (sentence_count <= sentence_index) {
         return NULL;
