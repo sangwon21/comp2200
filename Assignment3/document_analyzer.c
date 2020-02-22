@@ -5,13 +5,13 @@
 
 #define TRUE (1)
 #define FALSE (0)
-#define DEFAULT_PARAGRAPH_COUNT (1024)
-#define DEFAULT_SENTENCE_COUNT (1024)
-#define DEFAULT_WORD_COUNT (1024)
-#define DEFAULT_WORD_LENGTH (1024)
+#define DEFAULT_PARAGRAPH_COUNT (2048)
+#define DEFAULT_SENTENCE_COUNT (2048)
+#define DEFAULT_WORD_COUNT (2048)
 
-#define BUFFER_LENGTH (1024)
+#define DEFAULT_WORD_LENGTH (1024)
 #define SENETENCE_LENGTH (1024)
+#define BUFFER_LENGTH (1024)
 
 static size_t s_total_word_count = 0;
 static size_t s_total_sentence_count = 0;
