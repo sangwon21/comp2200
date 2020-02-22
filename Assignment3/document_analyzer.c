@@ -174,7 +174,6 @@ const char*** get_paragraph(const size_t paragraph_index)
 
 size_t get_paragraph_word_count(const char*** paragraph)
 {
-    size_t paragraph_index = 0;
     size_t sentence_index = 0;
     size_t word_index = 0;
     size_t result = 0;
@@ -182,14 +181,9 @@ size_t get_paragraph_word_count(const char*** paragraph)
         return 0;
     }
 
-    for (paragraph_index = 0; paragraph_index < s_total_paragraph_count; paragraph_index++) {
-        if ((const char***)s_paragraphs[paragraph_index] == paragraph) {
-            for (sentence_index = 0; sentence_index < DEFAULT_SENTENCE_COUNT && s_paragraphs[paragraph_index][sentence_index] != NULL; sentence_index++) {
-                for (word_index = 0; word_index < DEFAULT_WORD_COUNT && s_paragraphs[paragraph_index][sentence_index][word_index] != NULL; word_index++) {
-                    result++;
-                }
-            }
-            return result;
+    for (sentence_index = 0; sentence_index < DEFAULT_SENTENCE_COUNT && paragraph[sentence_index] != NULL; sentence_index++) {
+        for (word_index = 0; word_index < DEFAULT_WORD_COUNT && paragraph[sentence_index][word_index] != NULL; word_index++) {
+            result++;
         }
     }
 
@@ -198,7 +192,6 @@ size_t get_paragraph_word_count(const char*** paragraph)
 
 size_t get_paragraph_sentence_count(const char*** paragraph)
 {
-    size_t paragraph_index = 0;
     size_t sentence_index = 0;
     size_t result = 0;
 
@@ -206,13 +199,8 @@ size_t get_paragraph_sentence_count(const char*** paragraph)
         return 0;
     }
 
-    for (paragraph_index = 0; paragraph_index < s_total_paragraph_count; paragraph_index++) {
-        if ((const char***)s_paragraphs[paragraph_index] == paragraph) {
-            for (sentence_index = 0; sentence_index < DEFAULT_SENTENCE_COUNT && s_paragraphs[paragraph_index][sentence_index] != NULL; sentence_index++) {
-                result++;
-            }
-            return result;
-        }
+    for (sentence_index = 0; sentence_index < DEFAULT_SENTENCE_COUNT && paragraph[sentence_index] != NULL; sentence_index++) {
+        result++;
     }
 
     return result;
@@ -238,8 +226,6 @@ const char** get_sentence(const size_t paragraph_index, const size_t sentence_in
 
 size_t get_sentence_word_count(const char** sentence)
 {
-    size_t paragraph_index = 0;
-    size_t sentence_index = 0;
     size_t word_index = 0;
     size_t result = 0;
 
@@ -247,18 +233,9 @@ size_t get_sentence_word_count(const char** sentence)
         return 0;
     }
 
-    for (paragraph_index = 0; paragraph_index < s_total_paragraph_count; paragraph_index++) {
-        for (sentence_index = 0; sentence_index < DEFAULT_SENTENCE_COUNT && s_paragraphs[paragraph_index][sentence_index] != NULL; sentence_index++) {
-            if ((const char**)s_paragraphs[paragraph_index][sentence_index] == sentence) {
-                for (word_index = 0; word_index < DEFAULT_WORD_COUNT && s_paragraphs[paragraph_index][sentence_index][word_index] != NULL; word_index++) {
-                    result++;
-                }
-                return result;
-            }
-        }
-
+    for (word_index = 0; word_index < DEFAULT_WORD_COUNT && sentence[word_index] != NULL; word_index++) {
+        result++;
     }
-
     return result;
 }
 
@@ -268,15 +245,18 @@ int print_as_tree(const char* filename)
     size_t paragraph_index = 0;
     size_t sentence_index = 0;
     size_t word_index = 0;
+ 
     if (file == NULL || s_paragraphs == NULL) {
         return FALSE;
     }
 
-    for (paragraph_index = 0; paragraph_index < s_total_paragraph_count; paragraph_index++) {
+    for (paragraph_index = 0; paragraph_index < DEFAULT_PARAGRAPH_COUNT && s_paragraphs[paragraph_index] != NULL; paragraph_index++) {
         if (paragraph_index != 0) {
             fprintf(file, "\n\n");
         }
+
         fprintf(file, "Paragraph %d:", paragraph_index);
+        
         for (sentence_index = 0; sentence_index < DEFAULT_SENTENCE_COUNT && s_paragraphs[paragraph_index][sentence_index] != NULL; sentence_index++) {
             fprintf(file, "\n");
             fprintf(file, "    Sentence %d:", sentence_index);
