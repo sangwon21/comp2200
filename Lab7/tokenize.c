@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include "tokenize.h"
 
-#define DEFAULT_TOKENIZED_LENGTH (1024)
+#define DEFAULT_TOKENIZED_LENGTH (2048)
 
 char* split_malloc(char* str)
 {
@@ -17,11 +17,18 @@ char* split_malloc(char* str)
 char** tokenize_malloc(const char* str, const char* delim)
 {
     int str_len = strlen(str);
-    char* target = malloc(sizeof(char) * str_len);
+    char* target = NULL;
     char* token = NULL;
-    char** tokenized = calloc(DEFAULT_TOKENIZED_LENGTH, sizeof(char**));
+    char** tokenized = NULL;
     int index = 0;
 
+    if (str_len == 0) {
+        return tokenized;
+    }
+
+    target = malloc(sizeof(char) * str_len);
+    tokenized = calloc(DEFAULT_TOKENIZED_LENGTH, sizeof(char**));
+    
     strcpy(target, str);
     token = strtok(target, delim);
 
