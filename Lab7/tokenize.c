@@ -17,17 +17,14 @@ char* split_malloc(char* str)
 char** tokenize_malloc(const char* str, const char* delim)
 {
     int str_len = strlen(str);
-    char* target = NULL;
+    char* target = malloc(sizeof(char) * str_len + 1);
     char* token = NULL;
-    char** tokenized = NULL;
+    char** tokenized = calloc(DEFAULT_TOKENIZED_LENGTH, sizeof(char*));
     int index = 0;
 
     if (str_len == 0) {
         return tokenized;
     }
-
-    target = malloc(sizeof(char) * str_len);
-    tokenized = calloc(DEFAULT_TOKENIZED_LENGTH, sizeof(char**));
     
     strcpy(target, str);
     token = strtok(target, delim);
