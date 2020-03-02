@@ -5,7 +5,7 @@
 
 #define DEFAULT_TOKENIZED_LENGTH (1024)
 
-char* token_malloc(char* str)
+char* split_malloc(char* str)
 {
     int len = strlen(str);
     char* allocated_token = malloc(sizeof(char) * len + 1);
@@ -26,10 +26,12 @@ char** tokenize_malloc(const char* str, const char* delim)
     token = strtok(target, delim);
 
     while (token != NULL) {
-        tokenized[index] = token_malloc(token);
+        tokenized[index] = split_malloc(token);
         token = strtok(NULL, delim);
         index++;
     }
+
+    free(target);
 
     return tokenized;
 }
