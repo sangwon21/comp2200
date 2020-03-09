@@ -54,38 +54,31 @@ size_t get_matching_parentheses(parenthesis_t* parentheses, size_t max_size, con
 
         if (target_char == DEFAULT_OPENING_PARENTHESIS) {
             default_parenthesis_stack[default_parenthesis_count++] = str_pointer - str;
-        }
-        else if (target_char == ANGLED_OPENING_PARENTHESIS) {
+        } else if (target_char == ANGLED_OPENING_PARENTHESIS) {
             angled_parenthesis_stack[angled_parenthesis_count++] = str_pointer - str;
-        }
-        else if (target_char == CURLY_OPENING_PARENTHESIS) {
+        } else if (target_char == CURLY_OPENING_PARENTHESIS) {
             curly_parenthesis_stack[curly_parenthesis_count++] = str_pointer - str;
-        }
-        else if (target_char == INEQUALITY_OPENING_PARENTHESIS) {
+        } else if (target_char == INEQUALITY_OPENING_PARENTHESIS) {
             inequality_parenthesis_stack[inequality_parenthesis_count++] = str_pointer - str;
-        }
-        else if (target_char == DEFAULT_CLOSING_PARENTHESIS) {
+        } else if (target_char == DEFAULT_CLOSING_PARENTHESIS) {
             if (default_parenthesis_count == 0) {
                 goto pointer_move;
             }
             parentheses[parentheses_count].opening_index = default_parenthesis_stack[--default_parenthesis_count];
             parentheses[parentheses_count++].closing_index = str_pointer - str;
-        }
-        else if (target_char == ANGLED_CLOSING_PARENTHESIS) {
+        } else if (target_char == ANGLED_CLOSING_PARENTHESIS) {
             if (angled_parenthesis_count == 0) {
                 goto pointer_move;
             }
             parentheses[parentheses_count].opening_index = angled_parenthesis_stack[--angled_parenthesis_count];
             parentheses[parentheses_count++].closing_index = str_pointer - str;
-        }
-        else if (target_char == CURLY_CLOSING_PARENTHESIS) {
+        } else if (target_char == CURLY_CLOSING_PARENTHESIS) {
             if (curly_parenthesis_count == 0) {
                 goto pointer_move;
             }
             parentheses[parentheses_count].opening_index = curly_parenthesis_stack[--curly_parenthesis_count];
             parentheses[parentheses_count++].closing_index = str_pointer - str;
-        }
-        else if (target_char == INEQUALTIY_CLOSING_PARENTHESIS) {
+        } else if (target_char == INEQUALTIY_CLOSING_PARENTHESIS) {
             if (inequality_parenthesis_count == 0) {
                 goto pointer_move;
             }
