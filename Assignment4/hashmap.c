@@ -2,6 +2,11 @@
 #include <stdlib.h>
 #include "hashmap.h"
 
+node_t* make_node_malloc()
+{
+    return malloc(sizeof(node_t));
+}
+
 hashmap_t* init_hashmap_malloc(size_t length, int (*p_hash_func)(const char* key)) 
 {
     int plist_index = 0;
@@ -10,19 +15,20 @@ hashmap_t* init_hashmap_malloc(size_t length, int (*p_hash_func)(const char* key
 	hashmap->length = length;
 	hashmap->plist = malloc(sizeof(node_t) * length);
     for (plist_index = 0; plist_index < length; plist_index++) {
-        hashmap->plist[plist_index] = -1;
+        hashmap->plist[plist_index] = NULL;
     }
-    
+
 	return hashmap;
 }
 
 int add_key(hashmap_t* hashmap, const char* key, const int value)
 {
     const int converted_key = hashmap->hash_func(key);
-    if (hashmap->plist[converted_key] >= 0) {
+    if (hashmap->plist[converted_key] != NULL) {
         return FALSE;
     }
-    hashmap->plist[converted_key] = value;
+    hashmap->plist[converted_key] = make_node_malloc();
+    hashmap->plist[converted_key]->value = value;
     return TRUE;
 }
 
@@ -35,20 +41,20 @@ int get_value(hashmap_t* hashmap, const char* key)
 int update_value(hashmap_t* hashmap, const char* key, int value)
 {
     const int converted_key = hashmap->hash_func(key);
-    if (hashmap->plist[converted_key] < 0) {
+    if (hashmap->plist[converted_key]->value < 0) {
         return FALSE;
     }
-    hashmap->plist[converted_key] = value;
+    hashmap->plist[converted_key]->value = value;
     return TRUE;
 }
 
 int remove_key(hashmap_t* hashmap, const char* key)
 {
     const int converted_key = hashmap->hash_func(key);
-    if (hashmap->plist[converted_key] < 0) {
+    if (hashmap->plist[converted_key]->value < 0) {
         return FALSE;
     }
-    hashmap->plist[converted_key] = -1;
+    hashmap->plist[converted_key]->value = -1;
     return TRUE;
 }
 
