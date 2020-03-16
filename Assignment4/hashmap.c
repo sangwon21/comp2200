@@ -34,8 +34,11 @@ int add_key(hashmap_t* hashmap, const char* key, const int value)
 
 int get_value(hashmap_t* hashmap, const char* key)
 {
-    const int value = hashmap->hash_func(key);
-    return value;
+    const int converted_key = hashmap->hash_func(key);
+    if (hashmap->plist[converted_key] == NULL) {
+        return -1;
+    }
+    return hashmap->plist[converted_key]->value;
 }
 
 int update_value(hashmap_t* hashmap, const char* key, int value)
