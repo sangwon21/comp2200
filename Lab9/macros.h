@@ -19,7 +19,7 @@
                 return x;\
                 )
 
-#define RANGE(curr, min, max)
+#define RANGE(curr, min, max) (for (curr = min; curr < max + 1; curr++))
 
 #define RANGE_DESC(curr, max, min)
 
