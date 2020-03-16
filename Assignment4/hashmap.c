@@ -14,11 +14,20 @@ hashmap_t* init_hashmap_malloc(size_t length, int (*p_hash_func)(const char* key
 
 int add_key(hashmap_t* hashmap, const char* key, const int value)
 {
-    int converted_key = hashmap->hash_func(key);
+    const int converted_key = hashmap->hash_func(key);
     if (hashmap->plist[converted_key] >= 0) {
         return FALSE;
     }
     hashmap->plist[converted_key] = value;
+    return TRUE;
+}
+
+int get_value(hashmap_t* hashmap, const char* key)
+{
+    const int value = hashmap->hash_func(key);
+    if (value < 0) {
+        return FALSE;
+    }
     return TRUE;
 }
 
