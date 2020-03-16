@@ -7,7 +7,11 @@
                     return y; \
                   )
 
-#define MIN(x, y) (0)
+#define MIN(x, y) ( if (x < y) { \
+                        return y; \
+                    } \
+                    return x; \
+                  )
 
 #define ABS(x) (0)
 
