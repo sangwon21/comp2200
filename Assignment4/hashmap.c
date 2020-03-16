@@ -4,11 +4,15 @@
 
 hashmap_t* init_hashmap_malloc(size_t length, int (*p_hash_func)(const char* key)) 
 {
+    int plist_index = 0;
 	hashmap_t* hashmap = malloc(sizeof(hashmap_t));
 	hashmap->hash_func = p_hash_func;
 	hashmap->length = length;
 	hashmap->plist = malloc(sizeof(node_t) * length);
-
+    for (plist_index = 0; plist_index < length; plist_index++) {
+        hashmap->plist[plist_index] = -1;
+    }
+    
 	return hashmap;
 }
 
