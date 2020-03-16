@@ -13,7 +13,11 @@
                     return x; \
                   )
 
-#define ABS(x) (0)
+#define ABS(x) ( if (x < 0) { \
+                    return x * -1; \
+                } \
+                return x;\
+                )
 
 #define RANGE(curr, min, max)
 
