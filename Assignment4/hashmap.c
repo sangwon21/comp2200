@@ -44,7 +44,7 @@ int get_value(hashmap_t* hashmap, const char* key)
 int update_value(hashmap_t* hashmap, const char* key, int value)
 {
     const int converted_key = hashmap->hash_func(key);
-    if (hashmap->plist[converted_key]->value < 0) {
+    if (hashmap->plist[converted_key] == NULL) {
         return FALSE;
     }
     hashmap->plist[converted_key]->value = value;
@@ -54,10 +54,11 @@ int update_value(hashmap_t* hashmap, const char* key, int value)
 int remove_key(hashmap_t* hashmap, const char* key)
 {
     const int converted_key = hashmap->hash_func(key);
-    if (hashmap->plist[converted_key]->value < 0) {
+    if (hashmap->plist[converted_key] == NULL) {
         return FALSE;
     }
-    hashmap->plist[converted_key]->value = -1;
+    free(hashmap->plist[converted_key]);
+    hashmap->plist[converted_key] = NULL;
     return TRUE;
 }
 
