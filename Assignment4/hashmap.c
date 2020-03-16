@@ -12,6 +12,17 @@ hashmap_t* init_hashmap_malloc(size_t length, int (*p_hash_func)(const char* key
 	return hashmap;
 }
 
+int add_key(hashmap_t* hashmap, const char* key, const int value)
+{
+    int converted_key = hashmap->hash_func(key);
+    if (hashmap->plist[converted_key] >= 0) {
+        return FALSE;
+    }
+    hashmap->plist[converted_key] = value;
+    return TRUE;
+}
+
+
 void destroy(hashmap_t* hashmap)
 {
     int plist_index = 0;
