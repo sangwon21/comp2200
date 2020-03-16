@@ -110,12 +110,15 @@ void destroy(hashmap_t* hashmap)
 {
     size_t plist_index = 0;
     node_t* node_ptr = NULL;
+    node_t* prev_node_ptr = node_ptr;
+
     for (plist_index = 0; plist_index < hashmap->length; plist_index++) {
         node_ptr = hashmap->plist[plist_index];
         while (node_ptr != NULL) {
-            free(node_ptr->key);
+            prev_node_ptr = node_ptr;
             node_ptr = node_ptr->next;
-            free(node_ptr);
+            free(prev_node_ptr->key);
+            free(prev_node_ptr );
         }
         free(hashmap->plist[plist_index]);
     }
