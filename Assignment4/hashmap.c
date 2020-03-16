@@ -118,11 +118,11 @@ void destroy(hashmap_t* hashmap)
             prev_node_ptr = node_ptr;
             node_ptr = node_ptr->next;
             free(prev_node_ptr->key);
-            free(prev_node_ptr );
+            free(prev_node_ptr);
         }
-        free(hashmap->plist[plist_index]);
     }
 
     free(hashmap->plist);
     free(hashmap);
 }
+
