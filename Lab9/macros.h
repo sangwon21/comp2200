@@ -21,7 +21,7 @@
 
 #define RANGE(curr, min, max) (for (curr = min; curr < max + 1; curr++))
 
-#define RANGE_DESC(curr, max, min)
+#define RANGE_DESC(curr, max, min) (for (curr = max; curr > min - 1; curr--))
 
 #define SET(ary, start, count, value)
 
