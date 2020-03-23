@@ -5,9 +5,9 @@
 #include <stdbool.h>
 
 typedef struct todo_list {
-    // Make your own members
-    int dummy;
     int priority;
+    todo_list_t* prev;
+    todo_list_t* next;
     char* todo;
 } todo_list_t;
 
