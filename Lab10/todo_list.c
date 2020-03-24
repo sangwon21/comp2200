@@ -69,11 +69,11 @@ bool complete_todo(todo_list_t* todo_list)
 
 const char* peek_or_null(todo_list_t* todo_list)
 {
-	if (todo_list == NULL || todo_list->current_size == 0) {
-		return NULL;
-	}
+    if (todo_list == NULL || todo_list->current_size == 0) {
+        return NULL;
+    }
 
-	int32_t max_priority = todo_list->todo_nodes[0].priority;
+    int32_t max_priority = todo_list->todo_nodes[0].priority;
     size_t todo_index = 0;
 
     for (size_t i = 0; i < todo_list->current_size; i++) {
