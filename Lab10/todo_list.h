@@ -6,16 +6,14 @@
 
 typedef struct todo_node {
     int32_t priority;
-    struct todo_node* prev;
-    struct todo_node* next;
-    char* todo;
+    char* task;
 } todo_node_t;
 
 
 typedef struct todo_list {
     size_t max_size;
     size_t current_size;
-    todo_node_t* head;
+    todo_node_t* todo_nodes;
 } todo_list_t;
 
 todo_list_t* init_todo_list_malloc(size_t max_size);
