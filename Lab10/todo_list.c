@@ -12,7 +12,7 @@ todo_list_t* init_todo_list_malloc(size_t max_size)
     return todo_list_malloc;
 }
 
-
+/*
 void dispose(todo_list_t* todo_list)
 {
     todo_node_t* todo_node_ptr = todo_list->head;
@@ -26,6 +26,7 @@ void dispose(todo_list_t* todo_list)
 
     free(todo_list);
 }
+*/
 
 todo_node_t* todo_node_malloc(const int32_t priority, const char* task)
 {
