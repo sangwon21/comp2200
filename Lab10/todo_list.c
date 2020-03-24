@@ -52,7 +52,7 @@ todo_node_t* traverse_list_to_the_end(todo_node_t* start)
 
 bool add_todo(todo_list_t* todo_list, const int32_t priority, const char* task)
 {
-    if (todo_list == NULL || todo_list->current_size >= todo_list->max_size) {
+    if (todo_list == NULL || todo_list->current_size >= todo_list->max_size || task == NULL) {
         return false;
     }
 
