@@ -12,9 +12,12 @@ todo_list_t* init_todo_list_malloc(size_t max_size)
     return todo_list_malloc;
 }
 
-/*
 void dispose(todo_list_t* todo_list)
 {
+    if (todo_list == NULL) {
+        return;
+    }
+
     todo_node_t* todo_node_ptr = todo_list->head;
     todo_node_t* target_ptr = todo_node_ptr;
     while (todo_node_ptr != NULL) {
@@ -23,10 +26,8 @@ void dispose(todo_list_t* todo_list)
         todo_node_ptr = todo_node_ptr->next;
         free(target_ptr);
     }
-
     free(todo_list);
 }
-*/
 
 todo_node_t* todo_node_malloc(const int32_t priority, const char* task)
 {
@@ -37,7 +38,6 @@ todo_node_t* todo_node_malloc(const int32_t priority, const char* task)
     todo_node->todo[str_len] = '\0';
     todo_node->priority = priority;
     todo_node->prev = todo_node->next = NULL;
-
     return todo_node;
 }
 
@@ -52,7 +52,7 @@ todo_node_t* traverse_list_to_the_end(todo_node_t* start)
 
 bool add_todo(todo_list_t* todo_list, const int32_t priority, const char* task)
 {
-    if (todo_list->current_size >= todo_list->max_size) {
+    if (todo_list == NULL || todo_list->current_size >= todo_list->max_size) {
         return false;
     }
 
@@ -69,13 +69,12 @@ bool add_todo(todo_list_t* todo_list, const int32_t priority, const char* task)
     todo_node_t* target_todo_node_ptr = traverse_list_to_the_end(todo_list->head);
     target_todo_node_ptr->next = todo_node;
     todo_node->prev = target_todo_node_ptr;
-
     return true;
 }
 
 bool complete_todo(todo_list_t* todo_list)
 {
-    if (todo_list->current_size == 0) {
+    if (todo_list == NULL || todo_list->current_size == 0) {
         return false;
     }
 
@@ -126,10 +125,16 @@ const char* peek_or_null(todo_list_t* todo_list)
 
 size_t get_count(todo_list_t* todo_list)
 {
+    if (todo_list == NULL) {
+        return 0;
+    }
     return todo_list->current_size;
 }
 
 bool is_empty(todo_list_t* todo_list)
 {
+    if (todo_list == NULL) {
+        return true;
+    }
     return todo_list->current_size == 0;
 }
