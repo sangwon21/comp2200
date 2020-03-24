@@ -22,8 +22,8 @@ void dispose(todo_list_t* todo_list)
     todo_node_t* target_ptr = todo_node_ptr;
     while (todo_node_ptr != NULL) {
         target_ptr = todo_node_ptr;
-        free(target_ptr->todo);
         todo_node_ptr = todo_node_ptr->next;
+        free(target_ptr->todo);
         free(target_ptr);
     }
     free(todo_list);
@@ -35,9 +35,9 @@ todo_node_t* todo_node_malloc(const int32_t priority, const char* task)
     int str_len = strlen(task);
     todo_node->todo = malloc(sizeof(char) * (str_len + 1));
     strcpy(todo_node->todo, task);
-    todo_node->todo[str_len] = '\0';
     todo_node->priority = priority;
-    todo_node->prev = todo_node->next = NULL;
+    todo_node->prev = NULL;
+    todo_node->next = NULL;
     return todo_node;
 }
 
