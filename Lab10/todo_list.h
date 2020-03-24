@@ -4,18 +4,25 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-typedef struct todo_list {
-    int priority;
-    todo_list_t* prev;
-    todo_list_t* next;
+typedef struct todo_node {
+    int32_t priority;
+    struct todo_node* prev;
+    struct todo_node* next;
     char* todo;
+} todo_node_t;
+
+
+typedef struct todo_list {
+    size_t max_size;
+    size_t current_size;
+    todo_node_t* head;
 } todo_list_t;
 
 todo_list_t* init_todo_list_malloc(size_t max_size);
 
 void dispose(todo_list_t* todo_list);
 
-bool add_todo(todo_list_t* todo_list, const int32_t priority, const char*   task);
+bool add_todo(todo_list_t* todo_list, const int32_t priority, const char* task);
 
 bool complete_todo(todo_list_t* todo_list);
 
