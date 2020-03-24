@@ -17,7 +17,7 @@ void dispose(todo_list_t* todo_list)
         return;
     }
     for (size_t i = 0; i < todo_list->current_size; i++) {
-        free(todo_list[i].todo_nodes);
+        free(todo_list->todo_nodes[i].task);
     }
     free(todo_list);
 }
