@@ -40,7 +40,7 @@ user_t* get_user_by_username_or_null(user_t** users_or_null, const char* usernam
     return NULL;
 }
 
-char* apply_rule(char* target)
+static char* apply_rule(char* target)
 {
     int length = strlen(target);
     if (length == 1) {
@@ -63,7 +63,7 @@ char* apply_rule(char* target)
     return target;    
 }
 
-char* convert_email(char* email)
+static char* convert_email(char* email)
 {
     char* ptr = strtok(email, "@");
     int length = strlen(ptr);
@@ -73,7 +73,7 @@ char* convert_email(char* email)
     return email;
 }
 
-char* convert_password(char* password)
+static char* convert_password(char* password)
 {
     apply_rule(password);
     return password;
@@ -121,7 +121,7 @@ bool update_password(user_t** users_or_null, size_t id, const char* password)
     convert_password(old_password);
     convert_password(new_password);
 #endif
-    fprintf(file, "TRACE: User %d updated email from \"%s\" to \"%s\"\n", target_user->id, old_password, new_password);
+    fprintf(file, "TRACE: User %d updated password from \"%s\" to \"%s\"\n", target_user->id, old_password, new_password);
     fclose(file);
     return true;
 }
