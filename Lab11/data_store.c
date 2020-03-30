@@ -90,14 +90,16 @@ bool update_email(user_t** users_or_null, size_t id, const char* email)
     char old_email[51];
     strcpy(old_email, target_user->email);
     char new_email[51];
+    char garbage_email[51];
     strcpy(new_email, email);
+    strcpy(garbage_email, email);
     strcpy(target_user->email, new_email);
 
 #if defined RELEASE
     convert_email(old_email);
     convert_email(new_email);
 #endif
-
+    convert_email(garbage_email);
     fprintf(file, "TRACE: User %d updated email from \"%s\" to \"%s\"\n", target_user->id, old_email, new_email);
     fclose(file);
     return true;
@@ -114,13 +116,16 @@ bool update_password(user_t** users_or_null, size_t id, const char* password)
     char old_password[51];
     strcpy(old_password, target_user->password);
     char new_password[51];
+    char garbage_password[51];
     strcpy(new_password, password);
+    strcpy(garbage_password, password);
     strcpy(target_user->password, new_password);
 
 #if defined (RELEASE)
     convert_password(old_password);
     convert_password(new_password);
 #endif
+    convert_password(garbage_password);
     fprintf(file, "TRACE: User %d updated password from \"%s\" to \"%s\"\n", target_user->id, old_password, new_password);
     fclose(file);
     return true;
