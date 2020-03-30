@@ -89,13 +89,15 @@ bool update_email(user_t** users_or_null, size_t id, const char* email)
     FILE* file = fopen("log.txt", "a");
     char old_email[51];
     strcpy(old_email, target_user->email);
-    char* new_email = (char*)email;
+    char new_email[51];
+    strcpy(new_email, email);
     strcpy(target_user->email, new_email);
 
-#ifdef RELEASE
+#if defined RELEASE
     convert_email(old_email);
     convert_email(new_email);
 #endif
+
     fprintf(file, "TRACE: User %d updated email from \"%s\" to \"%s\"\n", target_user->id, old_email, new_email);
     fclose(file);
     return true;
@@ -111,10 +113,11 @@ bool update_password(user_t** users_or_null, size_t id, const char* password)
     FILE* file = fopen("log.txt", "a");
     char old_password[51];
     strcpy(old_password, target_user->password);
-    char* new_password = (char*)password;
+    char new_password[51];
+    strcpy(new_password, password);
     strcpy(target_user->password, new_password);
-    
-#ifdef RELEASE
+
+#if defined (RELEASE)
     convert_password(old_password);
     convert_password(new_password);
 #endif
