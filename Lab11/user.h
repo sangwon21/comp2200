@@ -1,8 +1,7 @@
 #ifndef USER_H
 #define USER_H
 
-typedef struct user
-{
+typedef struct user {
     size_t id;
     char username[51];
     char password[51];
